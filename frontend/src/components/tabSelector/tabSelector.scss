@@ -1,0 +1,33 @@
+@import "../../variables.scss";
+
+.tabsWrapper {
+  display: flex;
+  align-items: center;
+
+  .tab {
+    padding: 16px 36px;
+    cursor: pointer;
+
+    background-color: $background-color-light;
+    color: #333;
+    transition: all 0.3s;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: none;
+    border: 1px solid #f1f1f1;
+
+    &.active {
+      background-color: $background-color-dark;
+      color: $text-color-lighter;
+    }
+
+    &:first-child {
+      border-top-left-radius: 10px;
+      border-right: none;
+    }
+
+    &:last-child {
+      border-top-right-radius: 10px;
+    }
+  }
+}

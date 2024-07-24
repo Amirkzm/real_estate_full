@@ -1,0 +1,12 @@
+@import "../../variables.scss";
+
+.tagContainer {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  gap: 5px;
+  background-color: $background-color-light;
+  font-size: 14px;
+  color: #615f5f;
+}

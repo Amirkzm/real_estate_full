@@ -1,0 +1,29 @@
+.itemContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  img {
+    border-radius: 50%;
+  }
+
+  .textPart {
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .lastMsg {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

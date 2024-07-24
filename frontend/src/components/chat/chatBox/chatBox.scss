@@ -1,0 +1,56 @@
+@import "../../../variables.scss";
+
+.chatBox {
+  flex: 1;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  .messages {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 20px;
+    overflow-y: scroll;
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - 100px);
+      padding: 10px;
+      border-radius: 10px;
+      gap: 5px;
+
+      .msgTime {
+        color: $text-color-light;
+        font-size: 10px;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .bottom {
+    border-top: 2px solid $primary-color-dark;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    textarea {
+      flex: 3;
+      height: 100%;
+      border: none;
+      padding: 20px;
+    }
+
+    button {
+      flex: 1;
+      background-color: $primary-color-dark;
+      height: 100%;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

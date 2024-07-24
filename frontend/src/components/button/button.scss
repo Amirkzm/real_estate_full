@@ -1,0 +1,8 @@
+@import "../../_variables.scss";
+.primaryButton {
+  padding: 10px 20px;
+  background-color: $primary-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
