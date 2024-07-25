@@ -1,3 +1,5 @@
+import "./button.scss";
+
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
