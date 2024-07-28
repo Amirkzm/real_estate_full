@@ -33,3 +33,11 @@ export type ChatMessageType = {
   fromMe?: boolean;
   time: string;
 };
+
+export type UserType = {
+  id: string;
+  username: string;
+  email: string;
+  avatar: string;
+  createdAt: Date;
+};
