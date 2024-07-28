@@ -14,7 +14,7 @@ nav {
       display: none;
     }
 
-    &:hover {
+    &:hover:not(.profile) {
       scale: 1.05;
     }
   }
@@ -54,6 +54,7 @@ nav {
     justify-content: flex-end;
     background-color: $secondary-color;
     height: 100%;
+    gap: 5px;
 
     @include md {
       background-color: transparent;
@@ -68,6 +69,8 @@ nav {
       display: flex;
       align-items: center;
       font-weight: bold;
+      gap: 10px;
+      padding: 0 15px;
 
       img {
         width: 40px;
@@ -84,8 +87,8 @@ nav {
       }
 
       .profile {
-        padding: 12px 24px;
-        background-color: $primary-color-dark;
+        // padding: 12px 24px;
+        // background-color: $primary-color-dark;
         cursor: pointer;
         border: none;
         position: relative;
@@ -102,6 +105,7 @@ nav {
           display: flex;
           align-items: center;
           justify-content: center;
+          z-index: 10;
         }
       }
     }

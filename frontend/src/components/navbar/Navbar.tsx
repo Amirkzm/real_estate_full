@@ -1,11 +1,45 @@
 import { useState } from "react";
 import "./navbar.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Dropdown from "../dropDownMenu/Dropdown";
+import { DropdownItem } from "../../types/propsTypes";
+import { CgProfile } from "react-icons/cg";
+import { IoLogOutOutline } from "react-icons/io5";
+import apiRequest from "../../lib/apiRequest";
+import { useUser } from "../../context/userProvider";
 
 function Navbar() {
   const [open, setOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { user, setUser } = useUser();
 
-  const user = true;
+  const logoutHandler = async () => {
+    try {
+      const res = await apiRequest.post("/auth/logout");
+      if (res.status === 200) {
+        setUser(null);
+        navigate("/");
+      } else {
+        throw new Error("Failed to logout");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const Dropdown_Items: DropdownItem[] = [
+    {
+      title: "Profile",
+      icon: <CgProfile />,
+      onClick: () => console.log(" go to profile"),
+    },
+    {
+      title: "Logout",
+      icon: <IoLogOutOutline />,
+      onClick: logoutHandler,
+    },
+  ];
+
   return (
     <nav>
       <div className="left">
@@ -26,15 +60,15 @@ function Navbar() {
               alt=""
             />
             <span>John Doe</span>
-            <Link to="/profile" className="profile">
+            <div className="profile">
               <div className="notification">3</div>
-              <span>Profile</span>
-            </Link>
+              <Dropdown items={Dropdown_Items} title={user.username} />
+            </div>
           </div>
         ) : (
           <>
-            <a href="/">Sign in</a>
-            <a href="/" className="register">
+            <a href="/authentication">Sign in</a>
+            <a href="/authentication" className="register">
               Sign up
             </a>
           </>

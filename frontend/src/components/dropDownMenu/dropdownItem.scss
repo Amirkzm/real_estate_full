@@ -1,0 +1,13 @@
+@import "../../variables.scss";
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px 10px;
+  gap: 10px;
+
+  &:hover {
+    background-color: $primary-color;
+  }
+}
