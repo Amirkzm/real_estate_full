@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { login, logout, register } from "../controllers/auth.controller";
+import { errorHandler } from "../utils/errorHandler";
 
 const router = Router();
 
-router.post("/register", register);
+router.post("/register", errorHandler(register));
 
-router.post("/login", login);
+router.post("/login", errorHandler(login));
 
-router.post("/logout", logout);
+router.post("/logout", errorHandler(logout));
 
 export default router;
