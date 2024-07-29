@@ -15,7 +15,7 @@ export const LoginSchema = z.object({
 });
 
 export const JwtPayloadSchema = z.object({
-  Id: z.string(),
+  userId: z.string(),
   iat: z.number(),
   exp: z.number(),
 });
