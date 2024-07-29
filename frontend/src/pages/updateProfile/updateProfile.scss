@@ -1,0 +1,139 @@
+@import "../../variables.scss";
+@import "../../responsive.scss";
+
+.profileUpdate {
+  display: flex;
+  align-items: center;
+  height: calc(100vh - 100px);
+
+  .left {
+    flex: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .formContainer {
+      height: 100%;
+      background-color: $background-color;
+      box-shadow: 0 0 10px 0 rgba(159, 41, 41, 0.1);
+      display: flex;
+      align-items: center;
+      border: 1px solid $border-color;
+      flex-direction: column;
+      padding: 50px 100px;
+      font-size: clamp(0.8rem, 1.2vw, 1rem);
+      gap: 20px;
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        input {
+          padding: 10px;
+          border: 1px solid $border-color;
+          border-radius: 5px;
+        }
+
+        .error {
+          color: red;
+          font-size: 0.8rem;
+        }
+        button {
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+
+  .right {
+    flex: 2;
+    background-color: $secondary-color;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 20px;
+
+    .largeProfileImage {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      box-shadow: 10px 10px 10px 10px rgba(159, 41, 41, 0.1);
+    }
+
+    .App {
+      position: relative;
+
+      .uploadImageWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        .image-item {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          gap: 10px;
+
+          .image-item__btn-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            button {
+              background-color: $primary-color;
+              color: $text-color-lighter;
+              padding: 10px;
+              border-radius: 5px;
+              cursor: pointer;
+            }
+
+            .remove-btn {
+              background-color: red;
+            }
+          }
+          img {
+            width: clamp(100px, 20vw, 200px);
+          }
+        }
+        button {
+          border: none;
+        }
+        .uploadImageIcon {
+          width: 50px;
+          height: 50px;
+          transition: all 0.3s;
+        }
+
+        .uploadImageButton {
+          animation: animateUploadIcon 1s infinite;
+          margin-top: 20px;
+          background-color: transparent;
+        }
+
+        @keyframes animateUploadIcon {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    @include md {
+      display: none;
+    }
+  }
+}
