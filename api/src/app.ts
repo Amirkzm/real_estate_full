@@ -2,11 +2,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import postRouter from "./routes/post.route";
-import authRouter from "./routes/auth.route";
-import testRouter from "./routes/test.route";
 import cookieParser from "cookie-parser";
 import { errorMiddleWare } from "./middleware/error";
+import { authRouter, postRouter, testRouter, userRouter } from "./routes";
+import path from "path";
 
 dotenv.config();
 
@@ -16,12 +15,14 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(path.join(__dirname, "..", "/uploads")));
 
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.use("/api/posts", postRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/test", testRouter);
+app.use("/api/users", userRouter);
 
 app.use(errorMiddleWare);
 
