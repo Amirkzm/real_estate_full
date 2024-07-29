@@ -1,6 +1,10 @@
 import * as jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { InternalException, invalidAuthTokenException } from "../exceptions";
+import {
+  InternalException,
+  invalidAuthTokenException,
+  MissedAuthTokenException,
+} from "../exceptions";
 import prisma from "../../lib/prisma";
 import { JwtPayloadSchema } from "../schema/auth.schema";
 
@@ -12,20 +16,24 @@ export const verifyToken = (
   try {
     const token = req.cookies.Bearer;
     if (!token) {
-      throw new invalidAuthTokenException();
+      throw new MissedAuthTokenException();
     }
     const secret = process.env.JWT_SECRET;
+    console.log("token in verifyJwtToken : ", token);
     if (!secret) throw new InternalException();
     jwt.verify(
       token,
       secret,
       async (err: jwt.VerifyErrors | null, payload: any) => {
         try {
-          console.log("payload is -------->", payload);
-          if (err) throw new invalidAuthTokenException();
+          if (err) {
+            console.log("err happened in jwtVerification");
+            throw new invalidAuthTokenException();
+          }
 
-          JwtPayloadSchema.parse(payload);
-          // if (!parsedPayload.userId) throw new invalidAuthTokenException();
+          const parsedPayload = JwtPayloadSchema.parse(payload);
+          console.log("parsed payload is :", parsedPayload);
+          if (!parsedPayload.userId) throw new invalidAuthTokenException();
 
           const user = await prisma.user.findUnique({
             where: {

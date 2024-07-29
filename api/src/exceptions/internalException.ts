@@ -1,8 +1,8 @@
 import HttpException from "./httpException";
 
 class InternalException extends HttpException {
-  constructor() {
-    super(500, "Internal error occurred. Please try again later.");
+  constructor(message?: string) {
+    super(500, message ?? "Internal error occurred. Please try again later.");
   }
 }
 

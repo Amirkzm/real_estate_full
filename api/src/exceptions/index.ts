@@ -8,4 +8,5 @@ export { default as UserNotFoundException } from "./userNotFoundException";
 export { default as UserAlreadyExistException } from "./userAlreadyExistException";
 export { default as NotAuthorizedException } from "./notAuthorizedException";
 export { default as AuthTokenMissingException } from "./authTokenMissingException";
+export { default as MissedAuthTokenException } from "./missedAuthTokenException";
 ``;
