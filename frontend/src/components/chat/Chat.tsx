@@ -15,9 +15,8 @@ const Chat = () => {
       <div className="chatList">
         <h1>Messages</h1>
         {[0, 1, 2, 3, 4, 5].map((item) => (
-          <div className="chatItem">
+          <div className="chatItem" key={item}>
             <ChatItem
-              key={item}
               name="John Doe"
               avatar={IMG_SRC}
               onClick={() => setChat(true)}

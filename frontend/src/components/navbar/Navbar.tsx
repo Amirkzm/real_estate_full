@@ -31,7 +31,7 @@ function Navbar() {
     {
       title: "Profile",
       icon: <CgProfile />,
-      onClick: () => console.log(" go to profile"),
+      onClick: () => navigate("/profile"),
     },
     {
       title: "Logout",
@@ -43,23 +43,19 @@ function Navbar() {
   return (
     <nav>
       <div className="left">
-        <a href="/" className="logo">
+        <Link to={"/"} className="logo">
           <img src="/logo.png" alt="" />
           <span>RealEstate</span>
-        </a>
-        <a href="/">Home</a>
-        <a href="/">About</a>
-        <a href="/">Contact</a>
-        <a href="/">Agents</a>
+        </Link>
+        <Link to={"/"}>Home</Link>
+        <Link to={"/"}>About</Link>
+        <Link to={"/"}>Contact</Link>
+        <Link to={"/"}>Agents</Link>
       </div>
       <div className="right">
         {user ? (
           <div className="user">
-            <img
-              src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-              alt=""
-            />
-            <span>John Doe</span>
+            <img src={user.avatar ?? "/no-profile.png"} alt="" />
             <div className="profile">
               <div className="notification">3</div>
               <Dropdown items={Dropdown_Items} title={user.username} />
@@ -67,10 +63,10 @@ function Navbar() {
           </div>
         ) : (
           <>
-            <a href="/authentication">Sign in</a>
-            <a href="/authentication" className="register">
+            <Link to="/auth/login">Sign in</Link>
+            <Link to="/auth/register" className="register">
               Sign up
-            </a>
+            </Link>
           </>
         )}
         <div className="menuIcon">
