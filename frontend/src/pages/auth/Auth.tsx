@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../components/button";
 import "./auth.scss";
 import usePostData from "../../hooks/usePostData";
 import { useUser } from "../../context/userProvider";
 import { useNavigate } from "react-router-dom";
+import { prepareUserObj } from "../../lib/utils";
 
 type AuthProps = {
   pageUsage?: "LOGIN" | "REGISTER";
@@ -13,7 +14,15 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
   const [isLogin, setIsLogin] = useState<boolean>(pageUsage === "LOGIN");
   const navigate = useNavigate();
 
-  const { user, setUser } = useUser();
+  useEffect(() => {
+    if (pageUsage === "LOGIN") {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [pageUsage]);
+
+  const { setUser } = useUser();
   const {
     isError: isLoginError,
     errorMessage: loginErrorMsg,
@@ -37,8 +46,14 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
     const password = formData.get("password") as string;
     const res = await registerPostData({ username, email, password });
     if (res?.status == 200) {
-      console.log("registeration successful");
-      setUser(res.data);
+      console.log(res.data);
+      console.log(res.data.data);
+      setUser({
+        ...res.data,
+        avatar: res.data.avatar
+          ? "http://localhost:3000/" + res.data.avatar
+          : null,
+      });
       navigate("/");
     }
   };
@@ -54,9 +69,9 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
       password,
     });
     if (res?.status === 200) {
-      console.log("Logged in");
-      console.log(res.data);
-      setUser(res.data);
+      const loginUserData = prepareUserObj(res.data.data);
+      setUser(loginUserData);
+
       navigate("/");
     }
   };

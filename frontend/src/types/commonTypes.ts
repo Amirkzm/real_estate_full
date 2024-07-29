@@ -38,6 +38,6 @@ export type UserType = {
   id: string;
   username: string;
   email: string;
-  avatar: string;
-  createdAt: Date;
+  avatar: string | null;
+  createdAt: string;
 };

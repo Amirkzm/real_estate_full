@@ -1,15 +1,21 @@
+import { useNavigate } from "react-router-dom";
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profile.scss";
 
 const Profile = () => {
+  const navigate = useNavigate();
+  const UpdateProfileHandler = () => {
+    navigate("/update-profile");
+  };
+
   return (
     <div className="profilePage">
       <div className="details">
         <div className="wrapper">
           <div className="title">
             <h1>User Information</h1>
-            <button>Update Profile</button>
+            <button onClick={UpdateProfileHandler}>Update Profile</button>
           </div>
           <div className="info">
             <span>
