@@ -13,94 +13,75 @@ import path from "path";
 
 export const getUsers = async (req: Request, res: Response) => {
   console.log("getUsers is running");
-  try {
-    const users = await prisma.user.findMany();
-    if (users) {
-      sendSuccessResponse(res, users, 200);
-    }
-  } catch (error) {
-    throw new InternalException("An error occurred while fetching users");
+  const users = await prisma.user.findMany();
+  if (users) {
+    sendSuccessResponse(res, users, 200);
   }
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  try {
-    const userId = req.params?.id;
+  const userId = req.params?.id;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-    if (user) {
-      const { password, ...rest } = user;
-      sendSuccessResponse(res, rest, 200);
-    } else {
-      throw new UserNotFoundException("User not found");
-    }
-  } catch (error) {
-    throw new InternalException("An error occurred while fetching user");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  if (user) {
+    sendSuccessResponse(res, user, 200);
+  } else {
+    throw new UserNotFoundException("User not found");
   }
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  console.log("______________________updateUser______________________");
-  try {
-    const id = req.params?.id;
-    const userId = req.user.id;
+  const id = req.params?.id;
+  const userId = req.user.id;
 
-    if (id !== userId) throw new NotAuthorizedException();
+  if (id !== userId) throw new NotAuthorizedException();
 
-    const sentData = req.body;
-    const avatar = req.file;
+  const sentData = req.body;
+  const avatar = req.file;
 
-    const { password: userPass, ...otherInfo } = sentData;
+  const { password: userPass, ...otherInfo } = sentData;
 
-    const parsedData = !userPass
-      ? UpdateProfileSchema.parse(otherInfo)
-      : UpdateProfileSchema.parse(sentData);
+  const parsedData = !userPass
+    ? UpdateProfileSchema.parse(otherInfo)
+    : UpdateProfileSchema.parse(sentData);
 
-    const { password, ...rest } = parsedData;
-    let hashedPassword;
+  const { password, ...rest } = parsedData;
+  let hashedPassword;
 
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 10);
-    }
-
-    const infoToSave = {
-      ...rest,
-      ...(password && { password: hashedPassword }),
-      avatar: avatar ? path.join("uploads", avatar.filename) : null,
-    };
-
-    const updatedUser = await prisma.user.update({
-      where: {
-        id,
-      },
-      data: infoToSave,
-    });
-
-    const { password: _, ...restUser } = updatedUser;
-    sendSuccessResponse(res, restUser, 200);
-  } catch (error) {
-    throw error;
+  if (password) {
+    hashedPassword = await bcrypt.hash(password, 10);
   }
+
+  const infoToSave = {
+    ...rest,
+    ...(password && { password: hashedPassword }),
+    avatar: avatar ? path.join("uploads", avatar.filename) : null,
+  };
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: infoToSave,
+  });
+
+  sendSuccessResponse(res, updateUser, 200);
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const id = req.params?.id;
-    const userId = req.user?.id;
-    if (id !== userId) {
-      throw new NotAuthorizedException();
-    }
-    await prisma.user.delete({
-      where: {
-        id,
-      },
-    });
-    sendSuccessResponse(res, {}, 200);
-  } catch (error) {
-    throw error;
+  const id = req.params?.id;
+  const userId = req.user?.id;
+  if (id !== userId) {
+    throw new NotAuthorizedException();
   }
+  await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  sendSuccessResponse(res, {}, 200);
 };
