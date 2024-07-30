@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import invalidCredentialsException from "../exceptions/invalidCredentialException";
 import InternalException from "../exceptions/internalException";
 import { LoginSchema, RegisterSchema } from "../schema/auth.schema";
-import { ZodError } from "zod";
 import { sendSuccessResponse } from "../responses";
 
 dotenv.config();
@@ -18,79 +17,57 @@ if (!JWT_SECRET) {
 export const register = async (req: Request, res: Response) => {
   const { username, password, email } = req.body;
 
-  // Hash password
-  try {
-    RegisterSchema.parse(req.body);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-      },
-    });
+  RegisterSchema.parse(req.body);
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = await prisma.user.create({
+    data: {
+      username,
+      email,
+      password: hashedPassword,
+    },
+  });
 
-    const { password: _, ...userWithoutPassword } = newUser;
-    if (newUser) {
-      sendSuccessResponse(res, userWithoutPassword, 201);
-    } else {
-      throw new InternalException();
-    }
-  } catch (error) {
-    if (error instanceof ZodError) {
-      throw error;
-    } else {
-      throw new InternalException();
-    }
+  if (newUser) {
+    sendSuccessResponse(res, newUser, 201);
+  } else {
+    throw new InternalException();
   }
 };
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
-  try {
-    LoginSchema.parse(req.body);
-    const user = await prisma.user.findUnique({
-      where: {
-        username,
-      },
+  LoginSchema.parse(req.body);
+  const user = await prisma.user.findUnique({
+    where: {
+      username,
+    },
+    omit: {
+      password: false,
+    },
+  });
+  if (!user) {
+    throw new invalidCredentialsException();
+  }
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  const { password: _, ...userWithoutPassword } = user;
+
+  if (isPasswordValid) {
+    const age = 1000 * 60 * 60 * 24 * 7;
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
+      expiresIn: age,
     });
-    if (!user) {
-      throw new invalidCredentialsException();
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    const { password: _, ...userWithoutPassword } = user;
+    res.cookie("Bearer", token, { httpOnly: true, maxAge: age });
 
-    if (isPasswordValid) {
-      const age = 1000 * 60 * 60 * 24 * 7;
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
-        expiresIn: age,
-      });
-
-      res.cookie("Bearer", token, { httpOnly: true, maxAge: age });
-
-      sendSuccessResponse(res, userWithoutPassword, 200);
-    } else {
-      throw new invalidCredentialsException();
-    }
-  } catch (error) {
-    if (
-      error instanceof invalidCredentialsException ||
-      error instanceof ZodError
-    ) {
-      throw error;
-    } else {
-      throw new InternalException();
-    }
+    sendSuccessResponse(res, userWithoutPassword, 200);
+  } else {
+    throw new invalidCredentialsException();
   }
 };
 
 export const logout = (req: Request, res: Response) => {
-  try {
-    res.clearCookie("token");
-    sendSuccessResponse(res, {}, 200);
-  } catch (error) {
-    throw new InternalException();
-  }
+  res.clearCookie("token");
+  sendSuccessResponse(res, {}, 200);
 };
