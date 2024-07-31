@@ -1,0 +1,14 @@
+@import "../../../variables.scss";
+
+.item {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  width: clamp(250px, 80%, 700px);
+
+  &.description {
+    .quill {
+      height: 120px;
+    }
+  }
+}

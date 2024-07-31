@@ -1,0 +1,100 @@
+@import "../../variables.scss";
+@import "../../responsive.scss";
+
+.createNewPost {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 100px);
+  overflow: scroll;
+
+  @include md {
+    display: block;
+  }
+  .left {
+    flex: 3;
+    height: calc(90vh);
+    overflow-y: scroll;
+  }
+
+  .right {
+    flex: 2;
+    background-color: $secondary-color;
+
+    @include md {
+      background-color: $background-color;
+    }
+  }
+
+  .right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+
+    h2 {
+      font-size: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    .App {
+      .uploadImageWrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        .uploadedImageWrapper {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+
+          .image-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 150px;
+            width: 150px;
+            gap: 10px;
+            img {
+              width: 150px;
+              height: 100px;
+              object-fit: cover;
+            }
+            .image-item__btn-wrapper {
+              .remove-btn {
+                background-color: $danger-color;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+
+        .uploadImageButton {
+          background-color: transparent;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          animation: animateButton 0.5s infinite alternate;
+        }
+
+        @keyframes animateButton {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-10px);
+          }
+        }
+      }
+    }
+  }
+}

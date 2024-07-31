@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profile.scss";
+import { Button } from "../../components/button";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -34,7 +35,9 @@ const Profile = () => {
           </div>
           <div className="title">
             <h1>My List</h1>
-            <button>Create New Post</button>
+            <Button>
+              <Link to={"/new-post"}>Create New Post</Link>
+            </Button>
           </div>
           <List />
           <div className="title">

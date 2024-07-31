@@ -2,9 +2,12 @@ import { SearchBar } from "../../components/searchBar";
 import CountUp from "react-countup";
 import "./homePage.scss";
 import { useState } from "react";
+import Progressbar from "../../components/multiStepForm/Progressbar";
+import { MultiStepForm } from "../../components/multiStepForm";
 
 const Homepage = () => {
   const [showPlus, setShowPlus] = useState<boolean>(false);
+
   return (
     <div className="homepage">
       <div className="textContainer">
