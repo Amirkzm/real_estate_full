@@ -7,6 +7,7 @@ import { Profile } from "./pages/profile";
 import { Auth } from "./pages/auth";
 import { UserProvider } from "./context/userProvider";
 import UpdateProfile from "./pages/updateProfile/UpdateProfile";
+import CreateNewPost from "./pages/createNewPost/CreateNewPost";
 
 function App() {
   const router = createBrowserRouter([
@@ -47,6 +48,10 @@ function App() {
         {
           path: "/update-profile",
           element: <UpdateProfile />,
+        },
+        {
+          path: "/new-post",
+          element: <CreateNewPost />,
         },
       ],
     },

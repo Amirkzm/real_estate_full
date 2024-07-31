@@ -1,0 +1,43 @@
+@import "../../variables.scss";
+
+.multiStepForm {
+  background-color: $background-color;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 100%;
+  gap: 20px;
+
+  .stepContainer {
+    width: clamp(250px, 80%, 700px);
+    text-align: center;
+    transform: translateX(0px);
+    flex: 12;
+    overflow-y: scroll;
+    input {
+      border: 1px solid $border-color;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    select {
+      border: 1px solid $border-color;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  }
+
+  .progressContainer {
+    flex: 1;
+  }
+
+  .btnContainer {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+  }
+}
