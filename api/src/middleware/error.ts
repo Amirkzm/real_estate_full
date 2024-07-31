@@ -29,11 +29,13 @@ export const errorMiddleWare = (
       },
     });
   } else {
+    console.log("here database error happened:", err);
     res.status(500).json({
       status: "error",
       errors: {
         code: 500,
         message: err,
+        details: err.stack,
       },
     });
   }

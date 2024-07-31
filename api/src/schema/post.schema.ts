@@ -12,7 +12,7 @@ enum Property {
 
 export const PostDetailsSchema = z.object({
   description: z.string().min(5).max(50),
-  utilities: z.array(z.string()).min(1),
+  utilities: z.string().optional(),
   income: z.string().min(1).optional(),
   pet: z.string().optional(),
   size: z.number().int().min(1).optional(),
@@ -24,7 +24,7 @@ export const PostDetailsSchema = z.object({
 export const CreatePostSchema = z.object({
   title: z.string().min(5).max(50),
   price: z.number().int().min(1),
-  images: z.array(z.string()).min(1),
+  images: z.array(z.string()).optional(),
   address: z.string(),
   city: z.string(),
   bedroom: z.number().int().min(1),
@@ -41,7 +41,7 @@ export type CreatePostDataType = z.infer<typeof CreatePostSchema>;
 export const UpdatePostSchema = z.object({
   title: z.string().min(5).max(50).optional(),
   price: z.number().int().min(1).optional(),
-  images: z.array(z.string()).min(1).optional(),
+  images: z.array(z.string()).optional(),
   address: z.string().optional(),
   city: z.string().optional(),
   bedroom: z.number().int().min(1).optional(),
