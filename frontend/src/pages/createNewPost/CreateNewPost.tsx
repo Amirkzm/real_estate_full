@@ -1,12 +1,12 @@
 import { useState } from "react";
-import "./createNewPost.scss";
-import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import MultiStepForm from "../../components/multiStepForm/MultiStepForm";
 import { BasicInfo, DetailsInfo, LocationInfo } from "./formsSteps";
 import { LatLngExpression } from "leaflet";
-import { usePostData } from "../../hooks";
 import ImageUploading, { ImageListType } from "react-images-uploading";
+import { useToastifyResponse } from "../../hooks";
+import "react-quill/dist/quill.snow.css";
+import "./createNewPost.scss";
 
 const CreateNewPost: React.FC = () => {
   const [description, setDescription] = useState("");
@@ -14,10 +14,10 @@ const CreateNewPost: React.FC = () => {
   const [selectedLocation, setSelectedLocation] =
     useState<LatLngExpression | null>(null);
 
-  const { isError, errorMessage, isLoading, postData } = usePostData("/posts");
-
   const [image, setImage] = useState<any[]>([]);
   const maxNumber = 4;
+
+  const toastifyResponse = useToastifyResponse({ endpoint: "/posts" });
 
   const onChange = (
     imageList: ImageListType,
@@ -32,10 +32,11 @@ const CreateNewPost: React.FC = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const inputs = Object.fromEntries(formData);
 
-    console.log(inputs);
+    const formData = new FormData();
+
+    const formInputs = new FormData(e.target);
+    const inputs = Object.fromEntries(formInputs);
 
     const dataToSend = {
       title: inputs.title,
@@ -54,7 +55,6 @@ const CreateNewPost: React.FC = () => {
         (selectedLocation as LatLngExpression & { lat: number; lng: number })
           ?.lng
       ),
-      images: image,
       postDetails: {
         description: description,
         utilities: inputs.utilities,
@@ -67,13 +67,13 @@ const CreateNewPost: React.FC = () => {
       },
     };
 
-    console.log(dataToSend);
+    formData.append("data", JSON.stringify(dataToSend));
 
-    const res = await postData(dataToSend);
-    if (res?.status === 200) {
-      console.log(res.data);
-      console.log(res.data.data);
-    }
+    image.forEach((img, index) => {
+      formData.append("images", img.file);
+    });
+
+    toastifyResponse({ data: formData });
   };
 
   return (

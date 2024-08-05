@@ -196,6 +196,13 @@
         display: flex;
         justify-content: space-between;
 
+        & > .savePosts {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+
         button {
           padding: 20px;
           display: flex;

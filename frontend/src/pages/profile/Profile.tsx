@@ -1,10 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profile.scss";
 import { Button } from "../../components/button";
+import { Suspense } from "react";
 
 const Profile = () => {
+  const promiseData = useLoaderData() as any;
+
   const navigate = useNavigate();
   const UpdateProfileHandler = () => {
     navigate("/update-profile");
@@ -39,11 +42,37 @@ const Profile = () => {
               <Link to={"/new-post"}>Create New Post</Link>
             </Button>
           </div>
-          <List />
+          <Suspense fallback={<p>loading posts</p>}>
+            <Await
+              resolve={promiseData.postResponse}
+              errorElement={<p>error loading posts... try again</p>}
+            >
+              {(resolvedPostResponse) => {
+                console.log("resolvedPostResponse:", resolvedPostResponse);
+                return (
+                  <List items={resolvedPostResponse?.data?.data?.myPosts} />
+                );
+              }}
+            </Await>
+          </Suspense>
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <List />
+          <Suspense fallback={<p>loading posts</p>}>
+            <Await
+              resolve={promiseData.postResponse}
+              errorElement={<p>error loading posts... try again</p>}
+            >
+              {(resolvedPostResponse) => {
+                console.log("resolvedPostResponse:", resolvedPostResponse);
+                const savedPosts =
+                  resolvedPostResponse?.data?.data?.savedPosts.map(
+                    (item: any) => item?.post
+                  );
+                return <List items={savedPosts} />;
+              }}
+            </Await>
+          </Suspense>
         </div>
       </div>
       <div className="chatContainer">

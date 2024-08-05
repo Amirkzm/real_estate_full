@@ -2,28 +2,29 @@ import React from "react";
 import { Button } from "../../components/button";
 import { useUser } from "../../context/userProvider";
 import "./updateProfile.scss";
-import { usePostData } from "../../hooks";
-import { UserType } from "../../types/commonTypes";
+import { useToastifyResponse } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import ImageUploading, { ImageListType } from "react-images-uploading";
+import { prepareUserObj } from "../../lib/utils";
 
 const UpdateProfile: React.FC = () => {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
-  const { isError, errorMessage, isLoading, postData } = usePostData(
-    `/users/${user?.id}`,
-    "PUT"
-  );
+
+  const toastifyResponse = useToastifyResponse({
+    endpoint: `/users/${user?.id}`,
+    reqMethod: "PUT",
+    onSuccess: (res) => {
+      setUser(prepareUserObj(res?.data.data));
+      navigate("/profile");
+      return "Profile updated successfully!";
+    },
+  });
 
   const [image, setImage] = React.useState<any[]>([]);
   const maxNumber = 1;
 
-  const onChange = (
-    imageList: ImageListType,
-    addUpdateIndex: number[] | undefined
-  ) => {
-    // data for submit
-    console.log(imageList, addUpdateIndex);
+  const onChange = (imageList: ImageListType) => {
     setImage(imageList as any);
   };
 
@@ -34,25 +35,21 @@ const UpdateProfile: React.FC = () => {
     const { username, email, password } = Object.fromEntries(formData);
     console.log({ username, email, password });
 
-    const res = await postData({ username, email, password });
-    if (res?.status === 200) {
-      setUser(res.data.data as UserType);
-      navigate("/profile");
-    }
+    toastifyResponse({ data: { username, email, password } });
   };
 
-  const avatarUploadHandler = async () => {
+  const avatarUploadHandler = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
     if (!image) return;
     const formData = new FormData();
     formData.append("avatar", image[0].file);
-    console.log("image", image[0]);
 
-    console.log("formData", formData);
-    const res = await postData(formData);
-    if (res?.status === 200) {
-      setUser(res.data.data as UserType);
-    }
+    toastifyResponse({ data: formData });
   };
+
+  console.log(user);
 
   return (
     <div className="profileUpdate">
@@ -81,8 +78,7 @@ const UpdateProfile: React.FC = () => {
               name="password"
               autoComplete="false"
             />
-            {isError && <div className="error">{errorMessage}</div>}
-            <Button disabled={isLoading}>Update informations</Button>
+            <Button>Update informations</Button>
           </form>
         </div>
       </div>
@@ -114,6 +110,7 @@ const UpdateProfile: React.FC = () => {
                       <button
                         onClick={avatarUploadHandler}
                         className="submit-btn"
+                        type="button"
                       >
                         submit
                       </button>
