@@ -1,12 +1,13 @@
 import prisma from "../../lib/prisma";
 import {
+  BadRequestException,
   InternalException,
   NotAuthorizedException,
   UserNotFoundException,
 } from "../exceptions";
 
 import { sendSuccessResponse } from "../responses";
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import { UpdateProfileSchema } from "../schema/user.schema";
 import bcrypt from "bcrypt";
 import path from "path";
@@ -69,7 +70,7 @@ export const updateUser = async (req: Request, res: Response) => {
     data: infoToSave,
   });
 
-  sendSuccessResponse(res, updateUser, 200);
+  sendSuccessResponse(res, updatedUser, 200);
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
@@ -84,4 +85,76 @@ export const deleteUser = async (req: Request, res: Response) => {
     },
   });
   sendSuccessResponse(res, {}, 200);
+};
+
+export const savePost = async (req: Request, res: Response) => {
+  console.log("savePost is running");
+  console.log("req.body", req.body);
+  const reqMethod = req.method;
+  console.log("reqMethod", reqMethod);
+  const { postId } = req.body;
+  console.log("postId", postId);
+  const userId = req?.user?.id;
+
+  if (!userId) throw new NotAuthorizedException();
+  if (!postId) throw new BadRequestException("Post id is required");
+
+  const existingSavedPost = await prisma.savedPost.findUnique({
+    where: {
+      userId_postId: {
+        userId,
+        postId,
+      },
+    },
+  });
+
+  if (reqMethod === "POST") {
+    if (existingSavedPost) {
+      sendSuccessResponse(res, { message: "Post saved successfully!" }, 200);
+    } else {
+      const savedPost = await prisma.savedPost.create({
+        data: {
+          user: { connect: { id: userId } },
+          post: { connect: { id: postId } },
+        },
+      });
+      sendSuccessResponse(res, { message: "Post saved successfully!" }, 201);
+    }
+  } else if (reqMethod === "DELETE") {
+    if (existingSavedPost) {
+      await prisma.savedPost.delete({
+        where: {
+          id: existingSavedPost.id,
+        },
+      });
+    }
+    sendSuccessResponse(
+      res,
+      { message: "Post removed from saved posts!" },
+      200
+    );
+  }
+};
+
+export const profilePosts = async (req: Request, res: Response) => {
+  const userId = req.user.id;
+  const myPosts = await prisma.post.findMany({
+    where: {
+      userId,
+    },
+  });
+
+  const savedPosts = await prisma.savedPost.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      post: true,
+    },
+  });
+
+  const allPosts = { myPosts, savedPosts };
+  console.log("all posts", allPosts);
+
+  sendSuccessResponse(res, allPosts, 200);
 };

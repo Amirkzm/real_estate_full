@@ -53,3 +53,28 @@ export const UpdatePostSchema = z.object({
 });
 
 export type UpdatePostDataType = z.infer<typeof UpdatePostSchema>;
+
+const parseNumber = (value: unknown) => {
+  if (typeof value === "string") {
+    const parsed = parseInt(value, 10);
+    if (isNaN(parsed)) {
+      throw new Error("Invalid number");
+    }
+    return parsed;
+  }
+  if (typeof value === "number") {
+    return value;
+  }
+  throw new Error("Invalid type");
+};
+
+export const GetPostsParamsSchema = z.object({
+  city: z.string().optional(),
+  property: z.string().toUpperCase().pipe(z.nativeEnum(Property)).optional(),
+  type: z.string().toUpperCase().pipe(z.nativeEnum(Type)).optional(),
+  bedroom: z.preprocess(parseNumber, z.number().int().min(0)).optional(),
+  minPrice: z.preprocess(parseNumber, z.number().int().min(0)).optional(),
+  maxPrice: z.preprocess(parseNumber, z.number().int().min(1)).optional(),
+});
+
+export type GetPostParamType = z.infer<typeof GetPostsParamsSchema>;
