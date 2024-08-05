@@ -1,7 +1,7 @@
 export type ListLocationType = {
   id: number;
   title: string;
-  img: string;
+  images: string;
   bedroom: number;
   bathroom: number;
   price: number;
@@ -15,17 +15,30 @@ export type SingleLocationType = {
   title: string;
   price: number;
   images: string[];
-  bedRooms: number;
+  bedroom: number;
   bathroom: number;
-  size: number;
   latitude: number;
   longitude: number;
   city: string;
   address: string;
-  school: string;
-  bus: string;
-  restaurant: string;
+  type: "APARTMENT" | "HOUSE";
+  property: "RENT" | "SALE";
+  createdAt: Date;
+  user: UserType;
+  postDetails: PostDetails;
+  isSaved?: boolean;
+};
+
+export type PostDetails = {
+  id: string;
   description: string;
+  utilities?: string;
+  pet?: string;
+  income?: string;
+  size?: number;
+  school?: number;
+  bus?: number;
+  restaurant?: number;
 };
 
 export type ChatMessageType = {
@@ -38,6 +51,6 @@ export type UserType = {
   id: string;
   username: string;
   email: string;
-  avatar: string | null;
+  avatar: string;
   createdAt: string;
 };
