@@ -2,12 +2,18 @@ import { Homepage } from "./pages/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ListPage from "./pages/listPage/ListPage";
 import { Layout, ProtectedRoute } from "./pages/layout";
-import ItemDetails from "./pages/itemDetails/ItemDetails";
 import { Profile } from "./pages/profile";
 import { Auth } from "./pages/auth";
 import { UserProvider } from "./context/userProvider";
 import UpdateProfile from "./pages/updateProfile/UpdateProfile";
 import CreateNewPost from "./pages/createNewPost/CreateNewPost";
+import { Toaster } from "react-hot-toast";
+import { PostDetails } from "./pages/postDetails";
+import {
+  listPageLoader,
+  postDetailsLoader,
+  profilePageLoader,
+} from "./lib/loaders";
 
 function App() {
   const router = createBrowserRouter([
@@ -22,10 +28,12 @@ function App() {
         {
           path: "/list",
           element: <ListPage />,
+          loader: listPageLoader,
         },
         {
           path: "/:id",
-          element: <ItemDetails />,
+          element: <PostDetails />,
+          loader: postDetailsLoader,
         },
         {
           path: "/auth/login",
@@ -44,6 +52,7 @@ function App() {
         {
           path: "/profile",
           element: <Profile />,
+          loader: profilePageLoader,
         },
         {
           path: "/update-profile",
@@ -59,6 +68,7 @@ function App() {
 
   return (
     <UserProvider>
+      <Toaster />
       <RouterProvider router={router} />
     </UserProvider>
   );

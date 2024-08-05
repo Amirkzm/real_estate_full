@@ -1,18 +1,26 @@
 import { Link } from "react-router-dom";
 import "./card.scss";
-import { ListLocationType } from "../../types/commonTypes";
+import { SingleLocationType } from "../../types/commonTypes";
 import { Tag } from "../tag";
 import { IconButton } from "../iconButton";
+import { generateImageAddress } from "../../lib/utils";
 
 type CardProps = {
-  item: ListLocationType;
+  item: SingleLocationType;
 };
 
 const Card: React.FC<CardProps> = ({ item }) => {
   return (
     <div className="card">
       <Link to={`/${item.id}`} className="imageContainer">
-        <img src={item.img} alt="" />
+        <img
+          src={
+            item.images.length > 0
+              ? generateImageAddress(item.images[0])
+              : "default-location-pic.png"
+          }
+          alt=""
+        />
       </Link>
       <div className="textContainer">
         <h2 className="title">
