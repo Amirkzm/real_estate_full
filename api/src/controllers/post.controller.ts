@@ -7,10 +7,33 @@ import {
 } from "../exceptions";
 import { sendSuccessResponse } from "../responses";
 import { Request, Response } from "express";
-import { CreatePostSchema, UpdatePostSchema } from "../schema/post.schema";
+import {
+  CreatePostSchema,
+  GetPostsParamsSchema,
+  UpdatePostSchema,
+} from "../schema/post.schema";
+import path from "path";
+import * as jwt from "jsonwebtoken";
 
 export const getPosts = async (req: Request, res: Response) => {
-  const posts = await prisma.post.findMany();
+  const params = req.query;
+  const parsedParams = GetPostsParamsSchema.parse(params);
+  console.log(parsedParams);
+  const posts = await prisma.post.findMany({
+    where: {
+      city: {
+        contains: parsedParams.city || undefined,
+        mode: "insensitive",
+      },
+      property: parsedParams.property || undefined,
+      bedroom: parsedParams.bedroom || undefined,
+      type: parsedParams.type || undefined,
+      price: {
+        gte: parsedParams.minPrice || 0,
+        lte: parsedParams.maxPrice || undefined,
+      },
+    },
+  });
   if (posts) {
     sendSuccessResponse(res, posts, 200);
   }
@@ -18,9 +41,8 @@ export const getPosts = async (req: Request, res: Response) => {
 
 export const getPost = async (req: Request, res: Response) => {
   const { id: postId } = req.params;
-  if (!postId) {
-    throw new BadRequestException("Post id is required");
-  }
+  const token = req.cookies.Bearer;
+
   const selectedPost = await prisma.post.findUnique({
     where: {
       id: postId,
@@ -37,21 +59,57 @@ export const getPost = async (req: Request, res: Response) => {
     },
   });
 
-  console.log("selectedPost");
   if (!selectedPost) {
     throw new NotFoundException("Post not found");
   }
-  sendSuccessResponse(res, selectedPost, 200);
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new InternalException();
+
+  let finalPostItem = { ...selectedPost } as any;
+
+  if (token) {
+    jwt.verify(
+      token,
+      secret,
+      async (err: jwt.VerifyErrors | null, decoded: any) => {
+        if (err) {
+          console.error("JWT verification error:", err);
+          sendSuccessResponse(res, finalPostItem, 200); // Send response without isSaved
+          return;
+        }
+
+        const savedPost = await prisma.savedPost.findUnique({
+          where: {
+            userId_postId: {
+              userId: decoded?.userId,
+              postId: postId,
+            },
+          },
+        });
+
+        finalPostItem.isSaved = !!savedPost;
+        sendSuccessResponse(res, finalPostItem, 200); // Send response after isSaved is set
+      }
+    );
+  } else {
+    sendSuccessResponse(res, finalPostItem, 200); // Send response immediately if no token
+  }
 };
 
 export const createPost = async (req: Request, res: Response) => {
-  const sentData = req.body;
-  console.log("sentData", sentData);
+  const sentData = req.body.data;
+  const postImages = req.files as Express.Multer.File[];
+  const objSentData = JSON.parse(sentData);
+  const imagesPath = postImages.map((image) =>
+    path.join("uploads", image.filename)
+  );
+
+  const sentDataWithImages = { ...objSentData, images: imagesPath };
+
   const userId = req.user.id;
   const user = req.user;
-  console.log("user", user);
 
-  const parsedData = CreatePostSchema.parse(sentData);
+  const parsedData = CreatePostSchema.parse(sentDataWithImages);
   console.log("parsedData", parsedData);
 
   const newPost = await prisma.post.create({
