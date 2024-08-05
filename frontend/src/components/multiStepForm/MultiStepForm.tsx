@@ -12,6 +12,9 @@ type MultiStepFormProps = {
   children: React.ReactNode;
   backButton?: React.ReactNode;
   nextButton?: React.ReactNode;
+  isLoading?: boolean;
+  isErrored?: boolean;
+  errorMessage?: string;
   theme?: React.CSSProperties["color"];
 };
 
@@ -23,6 +26,9 @@ const MultiStepForm: React.FC<MultiStepFormProps> & { Step: typeof Step } = ({
   children,
   backButton,
   nextButton,
+  isErrored,
+  errorMessage,
+  isLoading,
   theme,
 }) => {
   const [titles, setTitles] = useState<string[]>([]);
@@ -92,7 +98,7 @@ const MultiStepForm: React.FC<MultiStepFormProps> & { Step: typeof Step } = ({
 
         {currentStep === totalSteps - 1 && (
           <Button type="button" onClick={handleSubmitClick}>
-            Submit
+            {isLoading ? "sending data..." : "Submit"}
           </Button>
         )}
       </div>

@@ -55,7 +55,7 @@ function Navbar() {
       <div className="right">
         {user ? (
           <div className="user">
-            <img src={user.avatar ?? "/no-profile.png"} alt="" />
+            <img src={user?.avatar} alt="" />
             <div className="profile">
               <div className="notification">3</div>
               <Dropdown items={Dropdown_Items} title={user.username} />

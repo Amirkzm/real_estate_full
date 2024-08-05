@@ -2,22 +2,21 @@ import { useMemo, useState } from "react";
 import "./tabSelector.scss";
 
 type TabSelectorProps = {
-  numberOfTabs: number;
   selectedTab?: number;
   setSelectedTab?: (tabIndex: number) => void;
   tabTitles: string[];
 };
 
 const TabSelector: React.FC<TabSelectorProps> = ({
-  numberOfTabs = 2,
   selectedTab,
   setSelectedTab,
   tabTitles,
 }) => {
   const [clickedTab, setClickedTab] = useState<number>(selectedTab || 0);
   const tabs = useMemo(
-    () => Array.from({ length: numberOfTabs }, (_: unknown, i: number) => i),
-    [numberOfTabs]
+    () =>
+      Array.from({ length: tabTitles.length }, (_: unknown, i: number) => i),
+    [tabTitles.length]
   );
 
   const tabClickHandler = (tabIndex: number) => {
@@ -33,7 +32,7 @@ const TabSelector: React.FC<TabSelectorProps> = ({
           onClick={() => tabClickHandler(tabIndex)}
           className={tabIndex === clickedTab ? "tab active" : "tab"}
         >
-          {tabTitles && tabTitles[tabIndex]}
+          {tabTitles[tabIndex]}
         </button>
       ))}
     </div>

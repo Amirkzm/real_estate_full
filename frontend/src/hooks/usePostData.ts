@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ErrorResponse } from "../types/errors";
 import apiRequest from "../lib/apiRequest";
 import { errorExtractor } from "../lib/ErrorExtractor";
@@ -18,27 +18,32 @@ const usePostData = (url: string, method = "POST"): PostDataReturnType => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const postData = async (data: Record<string, any>) => {
-    try {
-      setErrorMessage("");
-      setIsError(false);
-      setIsLoading(true);
-      const res = await (method === "POST"
-        ? apiRequest.post(url, data)
-        : apiRequest.put(url, data));
-      console.log(res);
-      return res;
-    } catch (error) {
-      setIsError(true);
-      setErrorMessage(
-        errorExtractor(error as AxiosError<ErrorResponse> | Error)
-      );
-
-      // setErrorMessage("An unexpected error occurred");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const postData = useCallback(
+    async (data: Record<string, any>) => {
+      try {
+        setErrorMessage("");
+        setIsError(false);
+        setIsLoading(true);
+        console.log("data inside usepostdata", data);
+        const res = await (method === "POST"
+          ? apiRequest.post(url, data)
+          : method === "PUT"
+          ? apiRequest.put(url, data)
+          : apiRequest.delete(url, { data }));
+        console.log(res);
+        return res;
+      } catch (error) {
+        console.log(error);
+        setIsError(true);
+        setErrorMessage(
+          errorExtractor(error as AxiosError<ErrorResponse> | Error)
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [method, url]
+  );
 
   return { isError, errorMessage, isLoading, postData };
 };
