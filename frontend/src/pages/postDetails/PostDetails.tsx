@@ -21,7 +21,6 @@ const PostDetails = () => {
   });
 
   const handleSavePost = async () => {
-    console.log("postItem", postItem);
     toastifyResponse({
       data: { postId: postItem.id },
       onSuccess: () => {
