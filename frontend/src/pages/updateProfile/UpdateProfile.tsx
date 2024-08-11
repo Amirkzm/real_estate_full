@@ -14,11 +14,6 @@ const UpdateProfile: React.FC = () => {
   const toastifyResponse = useToastifyResponse({
     endpoint: `/users/${user?.id}`,
     reqMethod: "PUT",
-    onSuccess: (res) => {
-      setUser(prepareUserObj(res?.data.data));
-      navigate("/profile");
-      return "Profile updated successfully!";
-    },
   });
 
   const [image, setImage] = React.useState<any[]>([]);
@@ -46,7 +41,14 @@ const UpdateProfile: React.FC = () => {
     const formData = new FormData();
     formData.append("avatar", image[0].file);
 
-    toastifyResponse({ data: formData });
+    toastifyResponse({
+      data: formData,
+      onSuccess: (res) => {
+        setUser(prepareUserObj(res?.data.data));
+        navigate("/profile");
+        return "Profile updated successfully!";
+      },
+    });
   };
 
   console.log(user);

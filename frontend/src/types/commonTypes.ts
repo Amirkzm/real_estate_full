@@ -1,17 +1,13 @@
-export type ListLocationType = {
-  id: number;
-  title: string;
-  images: string;
-  bedroom: number;
-  bathroom: number;
-  price: number;
-  address: string;
-  latitude: number;
-  longitude: number;
+export type UserType = {
+  id: string;
+  username: string;
+  email: string;
+  avatar: string;
+  createdAt: string;
 };
 
 export type SingleLocationType = {
-  id: number;
+  id: string;
   title: string;
   price: number;
   images: string[];
@@ -27,6 +23,7 @@ export type SingleLocationType = {
   user: UserType;
   postDetails: PostDetails;
   isSaved?: boolean;
+  userId?: string;
 };
 
 export type PostDetails = {
@@ -41,16 +38,38 @@ export type PostDetails = {
   restaurant?: number;
 };
 
-export type ChatMessageType = {
-  message: string;
-  fromMe?: boolean;
-  time: string;
+export type Chat = {
+  id: string;
+  users: UserType[];
+  userIDs: string[];
+  createdAt: Date;
+  seenBy: string[];
+  messages: ChatMessage[];
+  lastMessage: string;
 };
 
-export type UserType = {
+export type ChatMessage = {
   id: string;
-  username: string;
-  email: string;
-  avatar: string;
-  createdAt: string;
+  text: string;
+  userId: string;
+  chatId: string;
+  chat?: Chat;
+  users: UserType[];
+  createdAt: Date;
 };
+
+type requiredMapProperties = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  title: string;
+  bedroom: number;
+};
+
+export type MapItem = Partial<
+  Omit<
+    SingleLocationType,
+    "latitude" | "longitude" | "id" | "title" | "bedroom"
+  >
+> &
+  requiredMapProperties;

@@ -4,9 +4,11 @@ import List from "../../components/list/List";
 import "./profile.scss";
 import { Button } from "../../components/button";
 import { Suspense } from "react";
+import { useUser } from "../../context/userProvider";
 
 const Profile = () => {
   const promiseData = useLoaderData() as any;
+  const { user } = useUser();
 
   const navigate = useNavigate();
   const UpdateProfileHandler = () => {
@@ -24,16 +26,13 @@ const Profile = () => {
           <div className="info">
             <span>
               Avatar:
-              <img
-                src="https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt=""
-              />
+              <img src={user?.avatar} alt="" />
             </span>
             <span>
-              Username: <b>John Doe</b>
+              Username: <b>{user?.username}</b>
             </span>
             <span>
-              E-mail: <b>john@gmail.com</b>
+              E-mail: <b>{user?.email}</b>
             </span>
           </div>
           <div className="title">
@@ -47,12 +46,9 @@ const Profile = () => {
               resolve={promiseData.postResponse}
               errorElement={<p>error loading posts... try again</p>}
             >
-              {(resolvedPostResponse) => {
-                console.log("resolvedPostResponse:", resolvedPostResponse);
-                return (
-                  <List items={resolvedPostResponse?.data?.data?.myPosts} />
-                );
-              }}
+              {(resolvedPostResponse) => (
+                <List items={resolvedPostResponse?.data?.data?.myPosts} />
+              )}
             </Await>
           </Suspense>
           <div className="title">
@@ -64,7 +60,6 @@ const Profile = () => {
               errorElement={<p>error loading posts... try again</p>}
             >
               {(resolvedPostResponse) => {
-                console.log("resolvedPostResponse:", resolvedPostResponse);
                 const savedPosts =
                   resolvedPostResponse?.data?.data?.savedPosts.map(
                     (item: any) => item?.post
@@ -77,7 +72,16 @@ const Profile = () => {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Chat />
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={promiseData.chatResponse}
+              errorElement={<p>Error loading chats!</p>}
+            >
+              {(resolvedChatResponse) => {
+                return <Chat chatItems={resolvedChatResponse?.data?.data} />;
+              }}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </div>
