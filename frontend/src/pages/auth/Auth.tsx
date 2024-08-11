@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../components/button";
 import "./auth.scss";
-import usePostData from "../../hooks/usePostData";
 import { useUser } from "../../context/userProvider";
 import { useNavigate } from "react-router-dom";
 import { prepareUserObj } from "../../lib/utils";
 import { useToastifyResponse } from "../../hooks";
+import { GoogleLogin } from "@react-oauth/google";
+import apiRequest from "../../lib/apiRequest";
 
 type AuthProps = {
   pageUsage?: "LOGIN" | "REGISTER";
@@ -14,6 +15,11 @@ type AuthProps = {
 const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
   const [isLogin, setIsLogin] = useState<boolean>(pageUsage === "LOGIN");
   const navigate = useNavigate();
+  const { user } = useUser();
+
+  if (user) {
+    navigate("/");
+  }
 
   useEffect(() => {
     if (pageUsage === "LOGIN") {
@@ -27,20 +33,9 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
 
   const toastifyResponseRegister = useToastifyResponse({
     endpoint: "/auth/register",
-    onSuccess: (res) => {
-      setUser(prepareUserObj(res?.data.data));
-      navigate("/");
-      return "Welcome!";
-    },
   });
   const toastifyResponseLogin = useToastifyResponse({
     endpoint: "/auth/login",
-    onSuccess: (res) => {
-      const loginUserData = prepareUserObj(res?.data.data);
-      setUser(loginUserData);
-      navigate("/");
-      return "Welcome back!";
-    },
   });
 
   const registerFormHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,8 +54,37 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
 
-    toastifyResponseLogin({ data: { username, password } });
+    toastifyResponseLogin({
+      data: { username, password },
+      onSuccess: (res) => {
+        const loginUserData = prepareUserObj(res?.data.data);
+        setUser(loginUserData);
+        navigate("/");
+        return "Welcome back!";
+      },
+    });
   };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    console.log("Google login success", credentialResponse);
+    const idToken = credentialResponse.credential;
+    try {
+      const response = await apiRequest.post("/auth/google/verify", {
+        idToken,
+      });
+      const userData = response.data.data;
+      setUser(prepareUserObj(userData));
+      navigate("/");
+    } catch (error) {
+      console.error("Google login failed", error);
+    }
+  };
+
+  const handleGoogleError = () => {
+    console.error("Google login error");
+  };
+
+  const handleSwitchToSignIn = () => {};
 
   return (
     <div className="authPage">
@@ -73,11 +97,23 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
               <input name="email" type="text" placeholder="Email" />
               <input name="password" type="password" placeholder="Password" />
               <Button>Register</Button>
-              <div
-                onClick={() => setIsLogin((prev) => !prev)}
-                className="toggleForm"
-              >
-                Do you have an account?
+              <div className="toggleForm">
+                Do you have an account?{" "}
+                <Button
+                  onClick={() => navigate("/auth/login")}
+                  className="login-button"
+                  type="button"
+                >
+                  Sign in
+                </Button>
+              </div>
+              <div className="splitter"></div>
+              <div className="oauth-login">
+                <h5>or you can sign in using</h5>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                />
               </div>
             </form>
           </div>
@@ -97,7 +133,22 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
                 onClick={() => setIsLogin((prev) => !prev)}
                 className="toggleForm"
               >
-                Create an account
+                Don't have an account?
+                <Button
+                  onClick={() => navigate("/auth/register")}
+                  className="login-button"
+                  type="button"
+                >
+                  Register Free
+                </Button>
+              </div>
+              <div className="splitter"></div>
+              <div className="oauth-login">
+                <h5>or you can sign in using</h5>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                />
               </div>
             </form>
           </div>
