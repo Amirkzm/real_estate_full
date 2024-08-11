@@ -1,0 +1,128 @@
+@import "../../variables.scss";
+@import "../../responsive.scss";
+
+.about-page {
+  display: flex;
+  .left {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px);
+    overflow-y: scroll;
+    .hero {
+      background-color: #f8f9fa;
+      padding: 50px 0;
+      text-align: center;
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1.25rem;
+        color: #6c757d;
+      }
+    }
+
+    .mission,
+    .team,
+    .contact {
+      padding: 50px 0;
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+
+        h2 {
+          font-size: 2rem;
+          margin-bottom: 20px;
+        }
+
+        p {
+          font-size: 1.125rem;
+          color: #6c757d;
+        }
+      }
+    }
+
+    .team {
+      background-color: #f1f1f1;
+
+      .team-members {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .team-member {
+          flex: 1 1 calc(33.333% - 20px);
+          box-sizing: border-box;
+          margin-bottom: 30px;
+          text-align: center;
+
+          img {
+            width: 100px;
+            height: 100px;
+            max-width: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+          }
+
+          h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+          }
+
+          p {
+            font-size: 1rem;
+            color: #6c757d;
+          }
+        }
+      }
+
+      .team-member {
+        &.ceo {
+          img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  }
+
+  .contact {
+    background-color: #f8f9fa;
+    text-align: center;
+
+    p {
+      font-size: 1.125rem;
+      color: #6c757d;
+      margin-bottom: 10px;
+    }
+  }
+
+  .right {
+    flex: 2;
+    background-color: $secondary-color;
+    position: relative;
+    display: flex;
+    align-items: center;
+    img {
+      width: 100%;
+      position: absolute;
+      right: 0px;
+      top: 10%;
+      //   border-radius: 50%;
+    }
+
+    @include md {
+      display: none;
+    }
+  }
+}

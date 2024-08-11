@@ -13,7 +13,7 @@ export function generateImageAddress(images: string[]): string[];
 
 export function generateImageAddress(
   imageSrc: string | string[]
-): string | string[] {
+): string | string[] | null {
   const urlToStaticFiles = import.meta.env.VITE_BACKEND_BASE_URL.split(
     "api"
   )[0];
@@ -23,8 +23,6 @@ export function generateImageAddress(
   } else if (Array.isArray(imageSrc)) {
     return imageSrc.map((img) => urlToStaticFiles + img);
   } else {
-    throw new Error(
-      "Invalid argument type. Provide either a string or an array of strings."
-    );
+    return null;
   }
 }
