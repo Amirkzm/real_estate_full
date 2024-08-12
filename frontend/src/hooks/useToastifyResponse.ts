@@ -13,8 +13,8 @@ type ToastifyResponseArgs = {
   errorMessage?: string;
   loadingMessage?: string;
 } & (
-  | { response: Promise<any>; data?: never }
-  | { data: any; response?: never }
+  | { response?: Promise<any>; data?: never }
+  | { data?: any; response?: never }
 );
 
 const useToastifyResponse = ({
@@ -35,18 +35,11 @@ const useToastifyResponse = ({
     errorMessage: providedErrorMessage,
     loadingMessage,
   }: ToastifyResponseArgs) => {
-    if (!response && !data) {
-      throw new Error("Either response or data must be provided");
-    }
-
     const promise = response ?? postData(data);
 
     toast.promise(
       promise.then((res) => {
         if (res?.status && res?.status >= 200 && res?.status < 300) {
-          console.log(res.data);
-          console.log(res.data.data);
-          console.log();
           return res;
         } else {
           throw new Error(errorMessage);

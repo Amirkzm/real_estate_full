@@ -5,23 +5,22 @@ import React, {
   ReactNode,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import { UserType } from "../types/commonTypes";
+import apiRequest from "../lib/apiRequest";
 
 type UserContextType = {
   user: UserType | null;
   setUser: Dispatch<SetStateAction<UserType | null>>;
 };
 
-// Create the context with the defined type
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Define the UserProvider props type
 type UserProviderProps = {
   children: ReactNode;
 };
 
-// UserProvider component
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserType | null>(null);
 
@@ -29,6 +28,26 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     user,
     setUser,
   };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await apiRequest.get("/auth/me", {
+          withCredentials: true,
+        });
+        if (response.status === 200) {
+          const user = response.data.data as UserType;
+          if (!user.avatar) {
+            user.avatar = "/no-profile.png";
+          }
+          setUser(user);
+        }
+      } catch (error) {
+        console.error("User not authenticated", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
