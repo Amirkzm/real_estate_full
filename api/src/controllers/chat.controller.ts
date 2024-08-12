@@ -44,7 +44,6 @@ export const getChat = async (req: Request, res: Response) => {
 };
 
 export const createChat = async (req: Request, res: Response) => {
-  console.log("req.body", req.body);
   const { receiverId } = req.body;
   const userId = req.user.id;
   if (!receiverId)
@@ -70,10 +69,6 @@ export const createChat = async (req: Request, res: Response) => {
 
   // Check if the existing chat has the exact set of users
   if (existingChat) {
-    console.log(
-      "existingChat againnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
-      existingChat
-    );
     const existingUserIds = existingChat.users.map((user) => user.id);
     if (
       existingUserIds.length === allUsersIds.length &&

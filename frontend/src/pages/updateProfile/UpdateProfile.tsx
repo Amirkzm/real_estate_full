@@ -28,7 +28,6 @@ const UpdateProfile: React.FC = () => {
     const formData = new FormData(e.target as HTMLFormElement);
 
     const { username, email, password } = Object.fromEntries(formData);
-    console.log({ username, email, password });
 
     toastifyResponse({ data: { username, email, password } });
   };
@@ -50,8 +49,6 @@ const UpdateProfile: React.FC = () => {
       },
     });
   };
-
-  console.log(user);
 
   return (
     <div className="profileUpdate">

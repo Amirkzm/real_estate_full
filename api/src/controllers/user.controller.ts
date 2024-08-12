@@ -12,7 +12,6 @@ import bcrypt from "bcrypt";
 import path from "path";
 
 export const getUsers = async (req: Request, res: Response) => {
-  console.log("getUsers is running");
   const users = await prisma.user.findMany();
   if (users) {
     sendSuccessResponse(res, users, 200);
@@ -87,12 +86,8 @@ export const deleteUser = async (req: Request, res: Response) => {
 };
 
 export const savePost = async (req: Request, res: Response) => {
-  console.log("savePost is running");
-  console.log("req.body", req.body);
   const reqMethod = req.method;
-  console.log("reqMethod", reqMethod);
   const { postId } = req.body;
-  console.log("postId", postId);
   const userId = req?.user?.id;
 
   if (!userId) throw new NotAuthorizedException();
@@ -172,8 +167,6 @@ export const getNotifications = async (req: Request, res: Response) => {
       },
     },
   });
-
-  console.log("userUnreadChats ================>", userUnreadChats);
 
   const unreadMessagesPromise = userUnreadChats.map((chat) => {
     return prisma.message.findMany({

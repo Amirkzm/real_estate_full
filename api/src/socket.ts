@@ -22,24 +22,17 @@ const getUser = async (userId: string) => {
 export const initializeSocket = (io: SocketIOServer) => {
   io.on("connection", (socket) => {
     socket.on("newUser", async (userId) => {
-      console.log("connected", socket.id);
       await addUser(userId, socket.id);
-      console.log("onlineUsers", await redisClient.hGetAll("online_users"));
     });
 
     socket.on("sendMessage", async ({ recieverId, data }) => {
       const receiverSocketId = await getUser(recieverId);
-      console.log("onlineUsers", await redisClient.hGetAll("online_users"));
-      console.log("recieverId", recieverId);
-      console.log("receiver", receiverSocketId);
-      console.log("data", data);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("getMessage", data);
       }
     });
 
     socket.on("disconnect", async () => {
-      console.log("disconnected", socket.id);
       await removeUser(socket.id);
     });
   });

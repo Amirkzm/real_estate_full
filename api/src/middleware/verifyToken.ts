@@ -16,12 +16,10 @@ export const verifyToken = (
   try {
     const token = req.cookies.Bearer;
     if (!token) {
-      console.log("Token is missing in verifyToken middleware");
       throw new MissedAuthTokenException();
     }
     const secret = process.env.JWT_SECRET;
     if (!secret) {
-      console.log("JWT_SECRET is not set");
       throw new InternalException();
     }
 
@@ -31,7 +29,6 @@ export const verifyToken = (
       async (err: jwt.VerifyErrors | null, payload: any) => {
         try {
           if (err) {
-            console.log("err happened in jwtVerification");
             throw new invalidAuthTokenException();
           }
 
@@ -52,15 +49,11 @@ export const verifyToken = (
           req.user = user;
           next();
         } catch (error) {
-          console.log("error is verifyjwttoken middleware", error);
           next(error);
         }
       }
     );
   } catch (error) {
-    console.log(
-      " error happened and going to call next error middleware in verifyJwtToken"
-    );
     next(error);
   }
 };

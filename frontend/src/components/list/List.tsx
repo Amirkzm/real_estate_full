@@ -7,7 +7,6 @@ type ListProps = {
 };
 
 const List: React.FC<ListProps> = ({ items }) => {
-  // console.log("item in list=--=-=-=-=-?>>", items);
   return (
     <div className="list">
       {items.map((item) => (
