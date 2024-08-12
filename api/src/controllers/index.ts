@@ -1,4 +1,10 @@
-export { logout, login, register } from "./auth.controller";
+export {
+  logout,
+  login,
+  register,
+  isAuthenticated,
+  googleLogin,
+} from "./auth.controller";
 export {
   getUsers,
   getUser,
@@ -6,6 +12,7 @@ export {
   deleteUser,
   savePost,
   profilePosts,
+  getNotifications,
 } from "./user.controller";
 export {
   getPosts,
@@ -14,3 +21,11 @@ export {
   deletePost,
   updatePost,
 } from "./post.controller";
+
+export {
+  getChat,
+  getChats,
+  createChat,
+  readChat,
+  recieveNewMessage,
+} from "./chat.controller";
