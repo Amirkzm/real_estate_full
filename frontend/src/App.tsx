@@ -14,8 +14,19 @@ import {
   postDetailsLoader,
   profilePageLoader,
 } from "./lib/loaders";
+import TimeAgo from "javascript-time-ago";
+
+import en from "javascript-time-ago/locale/en";
+import { SocketProvider } from "./context/socketContext";
+import ChatBox from "./components/chat/chatBox/ChatBox";
+import { ErrorBoundary } from "./components/errorBoundary";
+import About from "./pages/about/About";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+TimeAgo.addDefaultLocale(en);
 
 function App() {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const router = createBrowserRouter([
     {
       path: "/",
@@ -26,22 +37,46 @@ function App() {
           element: <Homepage />,
         },
         {
+          path: "/about",
+          element: (
+            <ErrorBoundary>
+              <About />
+            </ErrorBoundary>
+          ),
+        },
+        {
           path: "/list",
-          element: <ListPage />,
+          element: (
+            <ErrorBoundary>
+              <ListPage />
+            </ErrorBoundary>
+          ),
           loader: listPageLoader,
         },
         {
           path: "/:id",
-          element: <PostDetails />,
+          element: (
+            <ErrorBoundary>
+              <PostDetails />
+            </ErrorBoundary>
+          ),
           loader: postDetailsLoader,
         },
         {
           path: "/auth/login",
-          element: <Auth />,
+          element: (
+            <ErrorBoundary>
+              <Auth pageUsage="LOGIN" />
+            </ErrorBoundary>
+          ),
         },
         {
           path: "/auth/register",
-          element: <Auth pageUsage="REGISTER" />,
+          element: (
+            <ErrorBoundary>
+              <Auth pageUsage="REGISTER" />
+            </ErrorBoundary>
+          ),
         },
       ],
     },
@@ -51,26 +86,43 @@ function App() {
       children: [
         {
           path: "/profile",
-          element: <Profile />,
+          element: (
+            <ErrorBoundary>
+              <Profile />
+            </ErrorBoundary>
+          ),
           loader: profilePageLoader,
         },
         {
           path: "/update-profile",
-          element: <UpdateProfile />,
+          element: (
+            <ErrorBoundary>
+              <UpdateProfile />
+            </ErrorBoundary>
+          ),
         },
         {
           path: "/new-post",
-          element: <CreateNewPost />,
+          element: (
+            <ErrorBoundary>
+              <CreateNewPost />
+            </ErrorBoundary>
+          ),
         },
       ],
     },
   ]);
 
   return (
-    <UserProvider>
-      <Toaster />
-      <RouterProvider router={router} />
-    </UserProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <UserProvider>
+        <SocketProvider>
+          <Toaster />
+          <RouterProvider router={router} />
+          <ChatBox />
+        </SocketProvider>
+      </UserProvider>
+    </GoogleOAuthProvider>
   );
 }
 

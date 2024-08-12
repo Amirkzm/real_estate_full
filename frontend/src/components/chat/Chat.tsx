@@ -1,35 +1,81 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./chat.scss";
 import ChatItem from "./ChatItem";
 import ChatBox from "./chatBox/ChatBox";
-import { Messages } from "../../lib/dummyDatas";
+import { Chat as ChatItemType, ChatMessage } from "../../types/commonTypes";
+import apiRequest from "../../lib/apiRequest";
+import { useChatItem, useNotificationStore } from "../../stores";
 
-const IMG_SRC =
-  "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+type ChatProps = {
+  chatItems: ChatItemType[];
+};
 
-const Chat = () => {
-  const [chat, setChat] = useState<boolean | null>(true);
+const Chat: React.FC<ChatProps> = ({ chatItems }) => {
+  const [allChats, setAllChats] = useState<ChatItemType[]>(chatItems);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [isErrorReadingChat, setIsErrorReadingChat] = useState<boolean>(false);
+  const { chatItem, setChatItem } = useChatItem();
+
+  const decrease = useNotificationStore((state) => state.decrease);
+
+  const handleChatItemClick = async (chatItem: ChatItemType) => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const res = await apiRequest.get(`/chats/${chatItem.id}`);
+      if (res.statusText === "OK") {
+        try {
+          setIsErrorReadingChat(false);
+          const readChatRes = await apiRequest.put(
+            `/chats/read/${chatItem.id}`
+          );
+          if (readChatRes.statusText === "OK") {
+            decrease();
+          }
+        } catch (error) {
+          setIsErrorReadingChat(true);
+        }
+        setChatItem(res.data.data);
+      }
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleNewMessageSent = useCallback(
+    (newSavedMessage: ChatMessage) => {
+      const updatedChats = allChats.map((chatItem) => {
+        if (chatItem.id === newSavedMessage.chatId) {
+          return {
+            ...chatItem,
+            messages: [...chatItem.messages, newSavedMessage],
+            lastMessage: newSavedMessage.text,
+          };
+        }
+        return chatItem;
+      });
+      setAllChats(updatedChats);
+    },
+    [allChats]
+  );
 
   return (
     <div className="chat">
       <div className="chatList">
         <h1>Messages</h1>
-        {[0, 1, 2, 3, 4, 5].map((item) => (
-          <div className="chatItem" key={item}>
-            <ChatItem
-              name="John Doe"
-              avatar={IMG_SRC}
-              onClick={() => setChat(true)}
-              lastMsg="Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet"
-            />
+        {allChats.map((item) => (
+          <div
+            className="chatItem"
+            key={item.id}
+            onClick={() => handleChatItemClick(item)}
+          >
+            <ChatItem chatItem={item} />
           </div>
         ))}
       </div>
-      {chat && (
-        <div className="chatBox">
-          <ChatBox messages={Messages} onClose={() => setChat(null)} />
-        </div>
-      )}
     </div>
   );
 };

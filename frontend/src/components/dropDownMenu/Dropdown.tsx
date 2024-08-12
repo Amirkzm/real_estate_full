@@ -6,13 +6,19 @@ import "./dropdown.scss";
 type DropdownProps = {
   title: string;
   items: DropDownItemType[];
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Dropdown: React.FC<DropdownProps> = ({ title, items }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const Dropdown: React.FC<DropdownProps> = ({
+  title,
+  items,
+  isOpen,
+  setIsOpen,
+}) => {
   return (
     <div className="dropdown" onClick={() => setIsOpen((prev) => !prev)}>
-      <span className="dropdownButton">{title}</span>
+      <div className="dropdownButton">{title}</div>
       <div className={`dropdownContent ${isOpen ? "open" : ""}`}>
         {items.map((item, index) => (
           <DropdownItem key={index} {...item} />

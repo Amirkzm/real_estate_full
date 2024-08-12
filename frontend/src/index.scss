@@ -24,7 +24,7 @@ input[type="number"] {
 }
 
 ::-webkit-scrollbar {
-  width: 5px; /* Width of the scrollbar */
+  width: 1px; /* Width of the scrollbar */
   height: 12px; /* Height of the scrollbar */
 }
 
@@ -42,5 +42,5 @@ input[type="number"] {
 
 /* Hover state of the scrollbar thumb */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #858383;
 }

@@ -1,4 +1,5 @@
 @import "../../../variables.scss";
+@import "../../../responsive.scss";
 
 .chatBox {
   flex: 1;
@@ -6,7 +7,17 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  position: absolute;
+  bottom: 0;
+  width: 530px;
+  height: 400px;
+  right: 45px;
+  z-index: 99999999;
+
+  @include sm {
+    width: 100%;
+    right: 0;
+  }
 
   .messages {
     display: flex;
@@ -14,20 +25,19 @@
     padding: 10px;
     gap: 20px;
     overflow-y: scroll;
+  }
 
-    .message {
-      display: flex;
-      flex-direction: column;
-      width: calc(100% - 100px);
-      padding: 10px;
-      border-radius: 10px;
-      gap: 5px;
+  .chatLoadingStatus {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
 
-      .msgTime {
-        color: $text-color-light;
-        font-size: 10px;
-        font-weight: 700;
-      }
+    img {
+      width: 150px;
+      height: 150px;
     }
   }
 

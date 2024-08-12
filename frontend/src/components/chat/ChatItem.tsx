@@ -1,24 +1,23 @@
+import { generateImageAddress } from "../../lib/utils";
+import { Chat as ChatItemType } from "../../types/commonTypes";
 import "./chatItem.scss";
 
 type ChatItemProps = {
-  name: string;
-  avatar?: string;
-  lastMsg: string;
+  chatItem: ChatItemType;
   onClick?: () => void;
 };
 
-const ChatItem: React.FC<ChatItemProps> = ({
-  name,
-  avatar,
-  lastMsg,
-  onClick,
-}) => {
+const ChatItem: React.FC<ChatItemProps> = ({ chatItem, onClick }) => {
   return (
     <div className="itemContainer" onClick={onClick}>
-      <img src={avatar} />
+      <img
+        src={
+          generateImageAddress(chatItem.users[0].avatar) ?? "/no-profile.png"
+        }
+      />
       <div className="textPart">
-        <p className="name">{name}</p>
-        <p className="lastMsg">{lastMsg}</p>
+        <p className="name">{chatItem?.users[0]?.username}</p>
+        <p className="lastMsg">{chatItem?.lastMessage}</p>
       </div>
     </div>
   );

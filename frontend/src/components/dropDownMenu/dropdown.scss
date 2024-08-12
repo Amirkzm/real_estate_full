@@ -14,20 +14,14 @@
     position: absolute;
     top: 110%;
     left: 0;
-    height: 0;
+    transform: scaleY(0);
     overflow: clip;
     transform-origin: top;
-    transition: all 0.5s ease;
+    transition: all 0.25s ease;
+    width: 100%;
     &.open {
-      z-index: 10;
-      height: 70px;
+      z-index: 999;
+      transform: scaleY(1);
     }
   }
-
-  // .dropdownButton {
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 50%;
-  //   transform: translateX(-50%) translateY(-50%);
-  // }
 }
