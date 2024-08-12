@@ -1,21 +1,19 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "./map.scss";
 import "leaflet/dist/leaflet.css";
-import { SingleLocationType } from "../../types/commonTypes";
 import { Pin } from "./pin";
 import { LatLngLiteral } from "leaflet";
+import { MapItem } from "../../types/commonTypes";
 
 type MapProps =
   | {
-      item: SingleLocationType;
+      item: MapItem;
     }
   | {
-      items: SingleLocationType[];
+      items: MapItem[];
     };
 
-const generateMapCenter = (
-  items: SingleLocationType | SingleLocationType[]
-) => {
+const generateMapCenter = (items: MapItem | MapItem[]) => {
   let center: [number, number];
   const defaultCenter = [52.4797, -1.90269];
   if (Array.isArray(items)) {
@@ -32,7 +30,7 @@ const generateMapCenter = (
 };
 
 const Map: React.FC<MapProps> = ({ ...props }: MapProps) => {
-  let itemsToRender: SingleLocationType | SingleLocationType[];
+  let itemsToRender: MapItem | MapItem[];
   if ("items" in props) {
     itemsToRender = props.items;
   } else {
@@ -46,7 +44,7 @@ const Map: React.FC<MapProps> = ({ ...props }: MapProps) => {
   return (
     <MapContainer
       center={mapCenter}
-      zoom={7}
+      zoom={"items" in props ? 5 : 7}
       scrollWheelZoom={false}
       className="map"
     >

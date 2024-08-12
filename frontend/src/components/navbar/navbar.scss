@@ -65,48 +65,6 @@ nav {
       margin: 20px;
     }
 
-    .user {
-      display: flex;
-      align-items: center;
-      font-weight: bold;
-      gap: 10px;
-      padding: 0 15px;
-
-      img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 20px;
-        @include sm {
-          display: none;
-        }
-      }
-
-      .profile {
-        padding: 2px 6px;
-        background-color: $primary-color;
-        cursor: pointer;
-        border: none;
-        position: relative;
-
-        .notification {
-          position: absolute;
-          top: -8px;
-          right: -8px;
-          background-color: red;
-          color: $text-color-lighter;
-          border-radius: 50%;
-          width: 26px;
-          height: 26px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;
-        }
-      }
-    }
-
     .register {
       background-color: $primary-color;
     }
@@ -142,12 +100,26 @@ nav {
       font-size: 24px;
       z-index: 1;
 
+      .logout {
+        cursor: pointer;
+        padding: 12px 24px;
+        margin: 20px;
+        transition: all 0.4s ease;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
       &.active {
         right: 0;
       }
 
       @include sm {
         a {
+          display: initial;
+        }
+        div {
           display: initial;
         }
       }
