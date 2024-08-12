@@ -16,11 +16,15 @@ export const verifyToken = (
   try {
     const token = req.cookies.Bearer;
     if (!token) {
+      console.log("Token is missing in verifyToken middleware");
       throw new MissedAuthTokenException();
     }
     const secret = process.env.JWT_SECRET;
-    console.log("token in verifyJwtToken : ", token);
-    if (!secret) throw new InternalException();
+    if (!secret) {
+      console.log("JWT_SECRET is not set");
+      throw new InternalException();
+    }
+
     jwt.verify(
       token,
       secret,
@@ -32,23 +36,31 @@ export const verifyToken = (
           }
 
           const parsedPayload = JwtPayloadSchema.parse(payload);
-          console.log("parsed payload is :", parsedPayload);
-          if (!parsedPayload.userId) throw new invalidAuthTokenException();
+
+          if (!parsedPayload.userId) {
+            throw new invalidAuthTokenException();
+          }
 
           const user = await prisma.user.findUnique({
             where: {
               id: payload.userId,
             },
           });
-          if (!user) throw new invalidAuthTokenException();
+          if (!user) {
+            throw new invalidAuthTokenException();
+          }
           req.user = user;
           next();
         } catch (error) {
+          console.log("error is verifyjwttoken middleware", error);
           next(error);
         }
       }
     );
   } catch (error) {
+    console.log(
+      " error happened and going to call next error middleware in verifyJwtToken"
+    );
     next(error);
   }
 };

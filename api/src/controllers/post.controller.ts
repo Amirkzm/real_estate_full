@@ -18,7 +18,6 @@ import * as jwt from "jsonwebtoken";
 export const getPosts = async (req: Request, res: Response) => {
   const params = req.query;
   const parsedParams = GetPostsParamsSchema.parse(params);
-  console.log(parsedParams);
   const posts = await prisma.post.findMany({
     where: {
       city: {
@@ -34,9 +33,9 @@ export const getPosts = async (req: Request, res: Response) => {
       },
     },
   });
-  if (posts) {
+  setTimeout(() => {
     sendSuccessResponse(res, posts, 200);
-  }
+  }, 10000);
 };
 
 export const getPost = async (req: Request, res: Response) => {

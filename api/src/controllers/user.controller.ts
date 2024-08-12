@@ -1,7 +1,6 @@
 import prisma from "../../lib/prisma";
 import {
   BadRequestException,
-  InternalException,
   NotAuthorizedException,
   UserNotFoundException,
 } from "../exceptions";
@@ -138,6 +137,7 @@ export const savePost = async (req: Request, res: Response) => {
 
 export const profilePosts = async (req: Request, res: Response) => {
   const userId = req.user.id;
+
   const myPosts = await prisma.post.findMany({
     where: {
       userId,
@@ -154,7 +154,46 @@ export const profilePosts = async (req: Request, res: Response) => {
   });
 
   const allPosts = { myPosts, savedPosts };
-  console.log("all posts", allPosts);
 
   sendSuccessResponse(res, allPosts, 200);
+};
+
+export const getNotifications = async (req: Request, res: Response) => {
+  const userId = req.user.id;
+  const userUnreadChats = await prisma.chat.findMany({
+    where: {
+      userIDs: {
+        has: userId,
+      },
+      NOT: {
+        seenBy: {
+          has: userId,
+        },
+      },
+    },
+  });
+
+  console.log("userUnreadChats ================>", userUnreadChats);
+
+  const unreadMessagesPromise = userUnreadChats.map((chat) => {
+    return prisma.message.findMany({
+      where: {
+        chatId: chat.id,
+        NOT: {
+          seenBy: {
+            has: userId,
+          },
+        },
+      },
+    });
+  });
+
+  const unreadMessages = await Promise.all(unreadMessagesPromise);
+
+  const unreadMessagesCount = unreadMessages.reduce(
+    (acc, messages) => acc + messages.length,
+    0
+  );
+
+  sendSuccessResponse(res, { unreadMessagesCount }, 200);
 };
