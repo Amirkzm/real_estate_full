@@ -1,0 +1,53 @@
+version: "3.8"
+services:
+  backend:
+    build: ./api
+    ports:
+      - "3000:4000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mongodb://mongo:27017/mydatabase
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./api:/app
+      - ./api/prisma:/app/prisma
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - mern-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5174:5173"
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "preview"] # Fixing the command syntax
+    volumes:
+      - ./frontend:/app
+    networks:
+      - mern-network
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern-network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - mern-network
+
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

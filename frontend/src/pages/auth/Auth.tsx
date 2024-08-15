@@ -84,13 +84,11 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
     console.error("Google login error");
   };
 
-  const handleSwitchToSignIn = () => {};
-
   return (
     <div className="authPage">
       <div className="mainContainer">
-        <div className={`card ${isLogin ? "regActive" : ""} `}>
-          <div className={`registerForm`}>
+        <div className={`card ${isLogin ? "loginActive" : "registerActive"} `}>
+          <div className={`forms registerForm`}>
             <form onSubmit={registerFormHandler}>
               <h1>Create an Account</h1>
               <input name="username" type="text" placeholder="Username" />
@@ -118,7 +116,7 @@ const Auth: React.FC<AuthProps> = ({ pageUsage = "LOGIN" }) => {
             </form>
           </div>
 
-          <div className={`loginForm`}>
+          <div className={`forms loginForm`}>
             <form onSubmit={loginFormHandler}>
               <h1>Login</h1>
               <input name="username" type="text" placeholder="Email" required />
