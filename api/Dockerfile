@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install dev dependencies locally (if needed)
+RUN npm install nodemon --save-dev
+
 # Copy the Prisma schema and generate the Prisma Client
 COPY prisma ./prisma
 RUN npx prisma generate
