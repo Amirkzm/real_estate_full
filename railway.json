@@ -1,6 +1,18 @@
 {
-  "build": {
-    "dockerfilePath": "./Dockerfile",
-    "context": "."
-  }
+  "builds": [
+    {
+      "service": "api",
+      "build": {
+        "context": "./api",
+        "dockerfile": "./api/Dockerfile"
+      }
+    },
+    {
+      "service": "frontend",
+      "build": {
+        "context": "./frontend",
+        "dockerfile": "./frontend/Dockerfile"
+      }
+    }
+  ]
 }
