@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./navbar.scss";
 import { Link, useNavigate } from "react-router-dom";
 import UserProfile from "./UserProfile";
@@ -18,6 +18,8 @@ const Navbar: React.FC = () => {
     setOpen((prev) => !prev);
   };
 
+  const rightDivRef = useRef<HTMLDivElement>(null);
+
   const logoutHandler = async () => {
     handleMenuClick();
     toastifyResponse({
@@ -32,7 +34,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav>
-      <div className="left">
+      <div className="navbarLeft">
         <Link to="/" className="logo">
           <img src="/logo.png" alt="" />
           <span>RealEstate</span>
@@ -42,7 +44,7 @@ const Navbar: React.FC = () => {
         <Link to="/about">About</Link>
         <Link to="/">Contact</Link>
       </div>
-      <div className="right">
+      <div className="navbarRight" ref={rightDivRef}>
         {user ? (
           <UserProfile />
         ) : (

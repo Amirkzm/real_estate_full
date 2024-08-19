@@ -1,8 +1,7 @@
-import { useCallback, useState } from "react";
+import {  useMemo, useState } from "react";
 import "./chat.scss";
 import ChatItem from "./ChatItem";
-import ChatBox from "./chatBox/ChatBox";
-import { Chat as ChatItemType, ChatMessage } from "../../types/commonTypes";
+import { Chat as ChatItemType } from "../../types/commonTypes";
 import apiRequest from "../../lib/apiRequest";
 import { useChatItem, useNotificationStore } from "../../stores";
 
@@ -16,6 +15,21 @@ const Chat: React.FC<ChatProps> = ({ chatItems }) => {
   const [isError, setIsError] = useState<boolean>(false);
   const [isErrorReadingChat, setIsErrorReadingChat] = useState<boolean>(false);
   const { chatItem, setChatItem } = useChatItem();
+
+
+  const itemToShow = useMemo(() => {
+    const newUserArray:string[] = []; 
+    return allChats.filter(item => {
+      let newUserFound = false;
+      item.userIDs.forEach(userId => {
+        if (!newUserArray.includes(userId)) {
+          newUserArray.push(userId);
+          newUserFound = true;
+        }
+      });
+      return newUserFound; // Return the item only if a new user was found
+    });
+  }, [allChats]); 
 
   const decrease = useNotificationStore((state) => state.decrease);
 
@@ -45,28 +59,11 @@ const Chat: React.FC<ChatProps> = ({ chatItems }) => {
     }
   };
 
-  const handleNewMessageSent = useCallback(
-    (newSavedMessage: ChatMessage) => {
-      const updatedChats = allChats.map((chatItem) => {
-        if (chatItem.id === newSavedMessage.chatId) {
-          return {
-            ...chatItem,
-            messages: [...chatItem.messages, newSavedMessage],
-            lastMessage: newSavedMessage.text,
-          };
-        }
-        return chatItem;
-      });
-      setAllChats(updatedChats);
-    },
-    [allChats]
-  );
-
   return (
     <div className="chat">
       <div className="chatList">
         <h1>Messages</h1>
-        {allChats.map((item) => (
+        {itemToShow.map((item) => (
           <div
             className="chatItem"
             key={item.id}

@@ -5,6 +5,7 @@ import "./profile.scss";
 import { Button } from "../../components/button";
 import { Suspense } from "react";
 import { useUser } from "../../context/userProvider";
+import { CardSkeleton } from "../../components/skeleton";
 
 const Profile = () => {
   const promiseData = useLoaderData() as any;
@@ -14,6 +15,10 @@ const Profile = () => {
   const UpdateProfileHandler = () => {
     navigate("/update-profile");
   };
+
+  const fallback = [0, 1, 2, 3, 4, 5, 6].map((item) => (
+    <CardSkeleton key={item} />
+  ));
 
   return (
     <div className="profilePage">
@@ -41,7 +46,7 @@ const Profile = () => {
               <Link to={"/new-post"}>Create New Post</Link>
             </Button>
           </div>
-          <Suspense fallback={<p>loading posts</p>}>
+          <Suspense fallback={fallback}>
             <Await
               resolve={promiseData.postResponse}
               errorElement={<p>error loading posts... try again</p>}
@@ -54,16 +59,14 @@ const Profile = () => {
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <Suspense fallback={<p>loading posts</p>}>
+          <Suspense fallback={fallback}>
             <Await
               resolve={promiseData.postResponse}
               errorElement={<p>error loading posts... try again</p>}
             >
               {(resolvedPostResponse) => {
                 const savedPosts =
-                  resolvedPostResponse?.data?.data?.savedPosts.map(
-                    (item: any) => item?.post
-                  );
+                  resolvedPostResponse?.data?.data?.savedPostWithIsSaved;
                 return <List items={savedPosts} />;
               }}
             </Await>
@@ -72,7 +75,7 @@ const Profile = () => {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Suspense fallback={<p>Loading...</p>}>
+          <Suspense fallback={<p>Loading chats...</p>}>
             <Await
               resolve={promiseData.chatResponse}
               errorElement={<p>Error loading chats!</p>}

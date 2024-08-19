@@ -16,7 +16,7 @@ const ChatItem: React.FC<ChatItemProps> = ({ chatItem, onClick }) => {
         }
       />
       <div className="textPart">
-        <p className="name">{chatItem?.users[0]?.username}</p>
+        <p className="name">{chatItem?.users[1]?.username}</p>
         <p className="lastMsg">{chatItem?.lastMessage}</p>
       </div>
     </div>

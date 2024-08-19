@@ -119,7 +119,7 @@ function App() {
         <SocketProvider>
           <Toaster />
           <RouterProvider router={router} />
-          <ChatBox />
+           <ChatBox />
         </SocketProvider>
       </UserProvider>
     </GoogleOAuthProvider>

@@ -25,7 +25,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
     reqMethod: item.isSaved ? "DELETE" : "POST",
   });
 
-  const { isError, errorMessage, isLoading, postData } = usePostData("/chats");
+  const { postData } = usePostData("/chats");
 
   const handleSaveAd = async () => {
     toastifySaveResponse({

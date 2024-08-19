@@ -31,6 +31,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
   const [chatMessages, setChatMessages] = useState<MessageWithStatus[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
 
   const { socket } = useSocket();
   const { isError, isLoading, postData } = usePostData("/chats/new-message");
@@ -135,10 +136,48 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     }
   }, [chatItem]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const navbarRightDiv = document.querySelector(
+        ".navbarRight"
+      ) as HTMLElement;
+      const navbarLeftDiv = document.querySelector(
+        ".navbarLeft"
+      ) as HTMLElement;
+
+      if (navbarRightDiv && chatBoxRef.current) {
+        const rightDivRect = navbarRightDiv.getBoundingClientRect();
+        const leftDivRect = navbarLeftDiv.getBoundingClientRect();
+        const chatBoxWidth = rightDivRect.width;
+
+        chatBoxRef.current.style.right = `${
+          window.innerWidth - rightDivRect.right
+        }px`;
+        if (window.innerWidth < 738) {
+          chatBoxRef.current.style.width = `${
+            rightDivRect.right - leftDivRect.left
+          }px`;
+          chatBoxRef.current.style.left = `${leftDivRect.left}px`;
+        } else {
+          chatBoxRef.current.style.width = `${chatBoxWidth}px`;
+          chatBoxRef.current.style.left = `initial`;
+        }
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [chatItem]);
+
   return (
     <>
       {chatItem && (
-        <div className="chatBox">
+        <div className="chatBox" ref={chatBoxRef}>
           <TopHeader
             avatar={
               generateImageAddress(chatItem?.users[0].avatar as string) ??
