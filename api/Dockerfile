@@ -28,6 +28,6 @@ COPY .env .env
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
 
 
