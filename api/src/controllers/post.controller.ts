@@ -9,11 +9,13 @@ import { sendSuccessResponse } from "../responses";
 import { Request, Response } from "express";
 import {
   CreatePostSchema,
+  FetchedPostType,
   GetPostsParamsSchema,
   UpdatePostSchema,
 } from "../schema/post.schema";
 import path from "path";
 import * as jwt from "jsonwebtoken";
+import { handleSavedPosts } from "../utils";
 
 export const getPosts = async (req: Request, res: Response) => {
   const params = req.query;
@@ -32,10 +34,13 @@ export const getPosts = async (req: Request, res: Response) => {
         lte: parsedParams.maxPrice || undefined,
       },
     },
+    include: {
+      savedPosts: true,
+    },
   });
-  setTimeout(() => {
-    sendSuccessResponse(res, posts, 200);
-  }, 10000);
+
+  const postWithIsSaved = await handleSavedPosts(req, res, posts);
+  sendSuccessResponse(res, postWithIsSaved, 200);
 };
 
 export const getPost = async (req: Request, res: Response) => {

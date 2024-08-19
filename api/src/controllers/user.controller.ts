@@ -10,6 +10,7 @@ import e, { Request, Response } from "express";
 import { UpdateProfileSchema } from "../schema/user.schema";
 import bcrypt from "bcrypt";
 import path from "path";
+import { handleSavedPosts } from "../utils";
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await prisma.user.findMany();
@@ -148,7 +149,14 @@ export const profilePosts = async (req: Request, res: Response) => {
     },
   });
 
-  const allPosts = { myPosts, savedPosts };
+  const savedPostWithIsSaved = savedPosts.map((savedPost) => ({
+    ...savedPost.post,
+    isSaved: true,
+  }));
+
+  console.log("savedPostWithIsSaved", savedPostWithIsSaved);
+
+  const allPosts = { myPosts, savedPostWithIsSaved };
 
   sendSuccessResponse(res, allPosts, 200);
 };
