@@ -18,18 +18,30 @@ const port = 3000;
 const app = express();
 const httpServer = createServer(app);
 
+// CORS configuration to allow all origins
+// Use the correct origin for your frontend
+
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL || "http://localhost:5174",
+    credentials: true,
   },
 });
+
+// Initialize Socket.IO
+initializeSocket(io);
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5174",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(__dirname, "..", "/uploads")));
-
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.use("/api/posts", postRouter);
 app.use("/api/auth", authRouter);
@@ -37,9 +49,6 @@ app.use("/api/users", userRouter);
 app.use("/api/chats", chatRouter);
 
 app.use(errorMiddleWare);
-
-// Initialize Socket.IO
-initializeSocket(io);
 
 process.on("SIGINT", async () => {
   await redisClient.quit();

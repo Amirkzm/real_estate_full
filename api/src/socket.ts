@@ -36,6 +36,4 @@ export const initializeSocket = (io: SocketIOServer) => {
       await removeUser(socket.id);
     });
   });
-
-  io.listen(4000);
 };

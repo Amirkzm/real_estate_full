@@ -1,5 +1,6 @@
 # Use a Node.js base image
-FROM node:18-alpine
+
+FROM node:18-bullseye-slim
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -28,3 +29,5 @@ EXPOSE 3000
 
 # Command to run the application
 CMD ["npm", "run", "dev"]
+
+
