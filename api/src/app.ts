@@ -18,12 +18,13 @@ const port = 3000;
 const app = express();
 const httpServer = createServer(app);
 
-// CORS configuration to allow all origins
-// Use the correct origin for your frontend
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [];
+
+console.log(allowedOrigins);
 
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5174",
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -33,7 +34,7 @@ initializeSocket(io);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5174",
+    origin: allowedOrigins,
     credentials: true,
   })
 );
