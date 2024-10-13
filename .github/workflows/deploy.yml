@@ -31,7 +31,7 @@ jobs:
         run: |
           # Backend image
           echo "Building and pushing backend image"
-          docker build -t realestate-backend:1.2 -f ./backend/Dockerfile .
+          docker build -t realestate-backend:1.2 -f ./api/Dockerfile .
           docker tag realestate-backend:1.2 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:1.2
           docker tag realestate-backend:1.2 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
           docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:1.2
