@@ -2,7 +2,7 @@ import "./listPage.scss";
 import { Filter } from "../../components/filter";
 import { Card } from "../../components/card";
 import { Map } from "../../components/map";
-import { Await, useLoaderData } from "react-router-dom";
+import { Await, useLoaderData, useSearchParams } from "react-router-dom";
 import { MapItem, SingleLocationType } from "../../types/commonTypes";
 import { Suspense } from "react";
 import { CardSkeleton } from "../../components/skeleton";
@@ -10,6 +10,9 @@ import { loadingMapCenters } from "../../lib/data";
 
 const ListPage = () => {
   const data: any = useLoaderData();
+  const [searchParams] = useSearchParams();
+  const location = searchParams.get("city")?.toUpperCase();
+  console.log(location);
 
   const fallback = [0, 1, 2, 3, 4, 5, 6].map((item) => (
     <CardSkeleton key={item} />
@@ -30,7 +33,7 @@ const ListPage = () => {
     <div className="listPage">
       <div className="listContainer">
         <div className="wrapper">
-          <Filter />
+          <Filter targetCity={location} />
           <Suspense fallback={fallback}>
             <Await
               resolve={data.postListResponse}

@@ -8,7 +8,10 @@ export const errorMiddleWare = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("________________start of error middleware________________");
+  console.log(
+    "________________start of error middleware________________",
+    Date.now()
+  );
   console.log(err);
   if (err instanceof HttpException) {
     res.status(err.status).json({

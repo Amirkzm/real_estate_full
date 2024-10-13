@@ -7,8 +7,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=mongodb+srv://admin:admin@cluster0.pfdoiu3.mongodb.net/estate?retryWrites=true&w=majority&appName=Cluster0
-      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
     volumes:
       - ./api:/app
       - ./api/prisma:/app/prisma
