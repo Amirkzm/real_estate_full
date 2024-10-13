@@ -59,7 +59,9 @@ jobs:
       - name: Deploy to EC2
         run: |
           echo "Deploying to EC2"
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ec2-user@51.21.147.165 << 'EOF'
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem  # Set proper permissions for the SSH key
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@51.21.147.165 << 'EOF'
           cd realestate-full/
           docker-compose down
           docker-compose up -d --build
