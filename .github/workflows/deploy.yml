@@ -1,28 +1,49 @@
-name: Deploy to EC2
+name: Deploy to ECR
 
 on:
   push:
     branches:
-      - main
+      - main # Change this if you want a different branch to trigger the deployment
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Deploy via SSH
+      - name: Log in to Amazon ECR
+        env:
+          AWS_REGION: eu-north-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@51.21.147.165 << 'EOF'
+          echo "Logging in to Amazon ECR"
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 545009847664.dkr.ecr.eu-north-1.amazonaws.com
+
+      - name: Build and push Docker images
+        env:
+          AWS_REGION: eu-north-1
+        run: |
+          echo "Building and pushing backend image"
+          docker build -t realestate-backend -f ./backend/Dockerfile .
+          docker tag realestate-backend:latest 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
+          docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
+
+          echo "Building and pushing frontend image"
+          docker build -t realestate-frontend -f ./frontend/Dockerfile .
+          docker tag realestate-frontend:latest 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
+          docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
+
+      - name: Deploy to EC2
+        run: |
+          echo "Deploying to EC2"
+          ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@51.21.147.165 << 'EOF'
           cd realestate-full/
-          git pull origin main
           docker-compose down
-          docker-compose up --build -d
+          docker-compose up -d --build
           EOF
