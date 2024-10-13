@@ -13,6 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create .env file
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./api/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./api/.env
+          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> ./api/.env
+          echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> ./api/.env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> ./api/.env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> ./api/.env
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> ./api/.env
+          echo "VITE_BACKEND_BASE_URL=${{ secrets.VITE_BACKEND_BASE_URL }}" >> ./api/.env
+          echo "VITE_SOCKET_ADDRESS=${{ secrets.VITE_SOCKET_ADDRESS }}" >> ./api/.env
+          echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}" >> ./api/.env
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
