@@ -13,7 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create .env file
+      # Create .env file for backend
+      - name: Create .env file for backend
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./api/.env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ./api/.env
@@ -22,6 +23,10 @@ jobs:
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> ./api/.env
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> ./api/.env
           echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> ./api/.env
+
+      # Create .env file for frontend
+      - name: Create .env file for frontend
+        run: |
           echo "VITE_BACKEND_BASE_URL=${{ secrets.VITE_BACKEND_BASE_URL }}" >> ./frontend/.env
           echo "VITE_SOCKET_ADDRESS=${{ secrets.VITE_SOCKET_ADDRESS }}" >> ./frontend/.env
           echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}" >> ./frontend/.env
