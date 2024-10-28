@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "./map.scss";
-import "leaflet/dist/leaflet.css";
+// import "leaflet/dist/leaflet.css";
 import { Pin } from "./pin";
 import { LatLngLiteral } from "leaflet";
 import { MapItem } from "../../types/commonTypes";

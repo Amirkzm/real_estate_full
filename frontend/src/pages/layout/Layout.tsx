@@ -1,7 +1,6 @@
 import { Navbar } from "../../components/navbar";
 import { Outlet } from "react-router-dom";
 import "./layout.scss";
-import ChatBox from "../../components/chat/chatBox/ChatBox";
 
 const Layout = () => {
   return (
