@@ -1,9 +1,12 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "./map.scss";
-// import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet.css";
 import { Pin } from "./pin";
 import { LatLngLiteral } from "leaflet";
 import { MapItem } from "../../types/commonTypes";
+import L from "leaflet";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 type MapProps =
   | {
@@ -12,6 +15,18 @@ type MapProps =
   | {
       items: MapItem[];
     };
+
+const defaultIcon = new L.Icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = defaultIcon;
 
 const generateMapCenter = (items: MapItem | MapItem[]) => {
   let center: [number, number];
