@@ -55,6 +55,22 @@ const PostDetails = () => {
     });
   };
 
+  const toastifyDeleteResponse = useToastifyResponse({
+    endpoint: `/posts/${postItem.id}`,
+    reqMethod: "DELETE",
+  });
+
+  const handleDeletePost = () => {
+    toastifyDeleteResponse({
+      data: { id: postItem.id },
+      onSuccess: () => {
+        navigate("/");
+        return "Post deleted successfully!";
+      },
+      onError: () => "Failed to delete post. Please try again.",
+    });
+  };
+
   return (
     <div className="singlePage">
       <div className="details">
@@ -176,6 +192,11 @@ const PostDetails = () => {
           <div className="mapContainer">
             <Map item={postItem} />
           </div>
+          {postItem.userId === user?.id && (
+            <button className="delete-button" onClick={handleDeletePost}>
+              Delete Post
+            </button>
+          )}
         </div>
       </div>
     </div>
