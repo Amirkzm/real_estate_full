@@ -66,6 +66,7 @@ jobs:
           # Re-authenticate with ECR
           aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 545009847664.dkr.ecr.eu-north-1.amazonaws.com
           cd realestate-full/
+          docker-compose pull 
           docker-compose down
           docker-compose up -d --build
           EOF
