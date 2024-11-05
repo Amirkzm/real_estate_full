@@ -74,11 +74,6 @@ const CreateNewPost: React.FC = () => {
 
     toastifyResponse({
       data: formData,
-      onSuccess: () => {
-        navigate("/");
-        return "Post deleted successfully!";
-      },
-      onError: () => "Failed to delete post. Please try again.",
     });
   };
 
