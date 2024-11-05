@@ -12,9 +12,9 @@ const Homepage = () => {
         <div className="wrapper">
           <h1>Find Real State & Get Your Dream Place</h1>
           <p>
-            Lorem ipsum dolor sit, Ensure the quality. Voluptatibus et tempore
-            nemo itaque reiciendis ratione ullam sapiente repellat enim dicta
-            obcaecati.
+            Join us to explore list of your dream places, Ensure the quality.
+            Voluptatibus et tempore nemo itaque reiciendis ratione ullam
+            sapiente repellat enim dicta obcaecati.
           </p>
           <SearchBar />
 
