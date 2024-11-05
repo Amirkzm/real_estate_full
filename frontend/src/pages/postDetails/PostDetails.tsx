@@ -198,7 +198,7 @@ const PostDetails = () => {
           </div>
           {postItem.userId === user?.id && (
             <button className="delete-button" onClick={handleDeletePost}>
-              Delete Ad
+              Delete Post
             </button>
           )}
         </div>

@@ -25,6 +25,7 @@ const CreateNewPost: React.FC = () => {
   ) => {
     // data for submit
     console.log(imageList, addUpdateIndex);
+    console.log();
     setImage(imageList as any);
   };
 
