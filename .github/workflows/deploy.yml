@@ -48,17 +48,17 @@ jobs:
           AWS_REGION: eu-north-1
         run: |
           echo "Building and pushing backend image"
-          docker build -t realestate-backend:1.3 -f ./api/Dockerfile ./api
-          docker tag realestate-backend:1.3 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:1.3
-          docker tag realestate-backend:1.3 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
-          docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:1.3
+          docker build -t realestate-backend:latest -f ./api/Dockerfile ./api
+          docker tag realestate-backend:latest 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
+          docker tag realestate-backend:latest 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
+          docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
           docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-backend:latest
 
           echo "Building and pushing frontend image"
-          docker build -t realestate-frontend:1.4 -f ./frontend/Dockerfile ./frontend
-          docker tag realestate-frontend:1.4 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:1.4
-          docker tag realestate-frontend:1.4 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
-          docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:1.4
+          docker build -t realestate-frontend:latest -f ./frontend/Dockerfile ./frontend
+          docker tag realestate-frontend:latest 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
+          docker tag realestate-frontend:latest 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
+          docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
           docker push 545009847664.dkr.ecr.eu-north-1.amazonaws.com/realestate-frontend:latest
 
       - name: Deploy to EC2
