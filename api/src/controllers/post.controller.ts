@@ -101,14 +101,18 @@ export const getPost = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
+  console.log("start of creating post controller");
   const sentData = req.body.data;
+  console.log("req.body = ", req.body);
   const postImages = req.files as Express.Multer.File[];
+  console.log("post images are :", postImages);
   const objSentData = JSON.parse(sentData);
   const imagesPath = postImages.map((image) =>
     path.join("uploads", image.filename)
   );
 
   const sentDataWithImages = { ...objSentData, images: imagesPath };
+  console.log("sentDataWithImages", sentDataWithImages);
 
   const userId = req.user.id;
   const user = req.user;
@@ -178,6 +182,7 @@ export const updatePost = async (req: Request, res: Response) => {
 
 export const deletePost = async (req: Request, res: Response) => {
   const { id: postId } = req.params;
+  console.log("post id is:", postId);
   if (!postId) {
     throw new BadRequestException("Post id is required");
   }
@@ -187,20 +192,31 @@ export const deletePost = async (req: Request, res: Response) => {
     where: {
       id: postId,
     },
+    include: { postDetails: true },
   });
 
   if (!selectedPost) {
     throw new NotFoundException("Post not found");
   }
 
+  console.log("selected post userid = ", selectedPost.userId);
+  console.log("active user id = ", userId);
+  console.log(selectedPost.userId === userId);
+
   if (selectedPost.userId !== userId) {
+    console.log("user not authorized kirekhar");
     throw new NotAuthorizedException();
   }
 
+  if (selectedPost.postDetails) {
+    await prisma.postDetails.delete({
+      where: { id: selectedPost.postDetails.id },
+    });
+  }
+
+  // Delete the Post
   await prisma.post.delete({
-    where: {
-      id: postId,
-    },
+    where: { id: postId },
   });
 
   sendSuccessResponse(res, {}, 200);
