@@ -7,6 +7,7 @@ import { MapItem } from "../../types/commonTypes";
 import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/images/marker-shadow.png";
 
 type MapProps =
   | {

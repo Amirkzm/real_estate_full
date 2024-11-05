@@ -1,19 +1,43 @@
 import Map from "../../components/map/Map";
 import { Slider } from "../../components/slider";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { SingleLocationType } from "../../types/commonTypes";
 import parse from "html-react-parser";
 import "./postDetails.scss";
 import { generateImageAddress } from "../../lib/utils";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
-import { useToastifyResponse } from "../../hooks";
+import { usePostData, useToastifyResponse } from "../../hooks";
 import { useState } from "react";
 import { useUser } from "../../context/userProvider";
+import { useChatItem } from "../../stores";
 
 const PostDetails = () => {
   const postItem = useLoaderData() as SingleLocationType;
   const [isSaved, setIsSaved] = useState<boolean>(postItem.isSaved ?? false);
   const { user } = useUser();
+  const navigate = useNavigate();
+  const { chatItem, setChatItem } = useChatItem();
+  const { postData } = usePostData("/chats");
+
+  const sendMessageToAdvertiser = async () => {
+    if (!user) {
+      return navigate("/auth/login");
+    } else if (
+      chatItem &&
+      chatItem?.userIDs.includes(postItem?.userId as string)
+    ) {
+      return;
+    }
+    const createChatRes = await postData({ receiverId: postItem.userId });
+    if (
+      createChatRes?.status &&
+      createChatRes?.status >= 200 &&
+      createChatRes?.status < 300
+    ) {
+      console.log("createChatRes", createChatRes.data.data);
+      setChatItem(createChatRes.data.data);
+    }
+  };
 
   const toastifyResponse = useToastifyResponse({
     endpoint: "/users/save-post",
@@ -30,6 +54,26 @@ const PostDetails = () => {
       onError: () => "Failed to save post",
     });
   };
+
+  const toastifyDeleteResponse = useToastifyResponse({
+    endpoint: `/posts/${postItem.id}`,
+    reqMethod: "DELETE",
+  });
+
+  const handleDeletePost = () => {
+    toastifyDeleteResponse({
+      data: { id: postItem.id },
+      onSuccess: () => {
+        navigate("/");
+        return "Post deleted successfully!";
+      },
+      onError: () => "Failed to delete post. Please try again.",
+    });
+  };
+
+  console.log("postItem.userId", postItem.userId);
+  console.log("active user id", user?.id);
+  console.log(postItem.userId === user?.id);
 
   return (
     <div className="singlePage">
@@ -62,6 +106,25 @@ const PostDetails = () => {
       <div className="features">
         <div className="wrapper">
           <p className="title">General</p>
+          <div className="buttons">
+            <button onClick={sendMessageToAdvertiser}>
+              <img src="/chat.png" alt="" />
+              Send a Message
+            </button>
+            {user && (
+              <button onClick={handleSavePost} type="button">
+                {isSaved ? (
+                  <div className="savePost">
+                    <BsBookmarkFill /> <span>remove from saved psot</span>
+                  </div>
+                ) : (
+                  <div>
+                    <BsBookmark /> <span>save post</span>
+                  </div>
+                )}
+              </button>
+            )}
+          </div>
           <div className="listVertical">
             <div className="feature">
               <img src="/utility.png" alt="" />
@@ -133,25 +196,11 @@ const PostDetails = () => {
           <div className="mapContainer">
             <Map item={postItem} />
           </div>
-          <div className="buttons">
-            <button>
-              <img src="/chat.png" alt="" />
-              Send a Message
+          {postItem.userId === user?.id && (
+            <button className="delete-button" onClick={handleDeletePost}>
+              Delete Ad
             </button>
-            {user && (
-              <button onClick={handleSavePost} type="button">
-                {isSaved ? (
-                  <div className="savePost">
-                    <BsBookmarkFill /> <span>remove from saved psot</span>
-                  </div>
-                ) : (
-                  <div>
-                    <BsBookmark /> <span>save post</span>
-                  </div>
-                )}
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

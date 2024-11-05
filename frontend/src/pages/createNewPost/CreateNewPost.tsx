@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import MultiStepForm from "../../components/multiStepForm/MultiStepForm";
 import { BasicInfo, DetailsInfo, LocationInfo } from "./formsSteps";
 import { LatLngExpression } from "leaflet";
@@ -7,12 +6,13 @@ import ImageUploading, { ImageListType } from "react-images-uploading";
 import { useToastifyResponse } from "../../hooks";
 import "react-quill/dist/quill.snow.css";
 import "./createNewPost.scss";
+import { useNavigate } from "react-router-dom";
 
 const CreateNewPost: React.FC = () => {
   const [description, setDescription] = useState("");
-  const [images, setImages] = useState([]);
   const [selectedLocation, setSelectedLocation] =
     useState<LatLngExpression | null>(null);
+  const navigate = useNavigate();
 
   const [image, setImage] = useState<any[]>([]);
   const maxNumber = 4;
@@ -27,8 +27,6 @@ const CreateNewPost: React.FC = () => {
     console.log(imageList, addUpdateIndex);
     setImage(imageList as any);
   };
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -73,7 +71,14 @@ const CreateNewPost: React.FC = () => {
       formData.append("images", img.file);
     });
 
-    toastifyResponse({ data: formData });
+    toastifyResponse({
+      data: formData,
+      onSuccess: () => {
+        navigate("/");
+        return "Post deleted successfully!";
+      },
+      onError: () => "Failed to delete post. Please try again.",
+    });
   };
 
   return (

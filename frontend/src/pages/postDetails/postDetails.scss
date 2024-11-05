@@ -106,11 +106,20 @@
     background-color: $secondary-color;
     height: 100%;
     overflow-y: scroll;
+    padding-bottom: 20px;
 
     @include md {
       flex: none;
       height: max-content;
       margin-bottom: 50px;
+    }
+
+    .delete-button {
+      padding: 5px 0;
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      font-size: large;
     }
 
     .wrapper {
