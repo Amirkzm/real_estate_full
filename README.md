@@ -52,8 +52,8 @@ This repository contains a full-stack real estate application where users can re
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-   cd YOUR_REPO_NAME
+   git clone git@github.com:Amirkzm/real_estate_full.git
+   cd real-estate-full
    ```
 2. Set up environment variables:
 
@@ -62,7 +62,7 @@ This repository contains a full-stack real estate application where users can re
 
 3. Run Docker Compose to start services:
 
-<code>docker-compose up --build </code>
+   <code>docker-compose up --build </code>
 
 ## Usage
 
