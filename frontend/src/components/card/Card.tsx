@@ -32,7 +32,9 @@ const Card: React.FC<CardProps> = ({ item }) => {
       data: { postId: item.id },
       onSuccess: () => {
         setIsSaved((prev) => !prev);
-        return "Post saved successfully!";
+        return !isSaved
+          ? "Post saved successfully!"
+          : "Post Removed from Saved";
       },
       onError: () => "Failed to save post",
     });
