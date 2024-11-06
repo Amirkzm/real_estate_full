@@ -73,6 +73,18 @@ This repository contains a full-stack real estate application where users can re
 - Access the frontend at http://localhost:5174.
 - Access the backend API at http://localhost:3000.
 
+## Contributing
+
+Feel free to fork this repository and submit pull requests. Contributions to improve the application are always welcome!
+
+To Contribute:
+
+- Fork the repo.
+- Create a new branch (git checkout -b feature-name).
+- Commit your changes (git commit -m 'Add new feature').
+- Push to the branch (git push origin feature-name).
+- Open a pull request.
+
 ## License
 
 This project is licensed under the MIT License.
