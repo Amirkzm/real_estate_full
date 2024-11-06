@@ -42,8 +42,12 @@ const Card: React.FC<CardProps> = ({ item }) => {
 
   const sendMessageToAdvertiser = async () => {
     if (!user) {
+      console.log("no user");
       return navigate("/auth/login");
     } else if (chatItem && chatItem?.userIDs.includes(item?.userId as string)) {
+      console.log("return without response.");
+      console.log("chatitem.userIDs", chatItem.userIDs);
+      console.log("item.userId", item.userId);
       return;
     }
     const createChatRes = await postData({ receiverId: item.userId });
@@ -54,6 +58,8 @@ const Card: React.FC<CardProps> = ({ item }) => {
     ) {
       console.log("createChatRes", createChatRes.data.data);
       setChatItem(createChatRes.data.data);
+    } else {
+      console.log("inside else statement");
     }
   };
 

@@ -1,4 +1,4 @@
-import {  useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import "./chat.scss";
 import ChatItem from "./ChatItem";
 import { Chat as ChatItemType } from "../../types/commonTypes";
@@ -14,14 +14,13 @@ const Chat: React.FC<ChatProps> = ({ chatItems }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isErrorReadingChat, setIsErrorReadingChat] = useState<boolean>(false);
-  const { chatItem, setChatItem } = useChatItem();
-
+  const { setChatItem } = useChatItem();
 
   const itemToShow = useMemo(() => {
-    const newUserArray:string[] = []; 
-    return allChats.filter(item => {
+    const newUserArray: string[] = [];
+    return allChats.filter((item) => {
       let newUserFound = false;
-      item.userIDs.forEach(userId => {
+      item.userIDs.forEach((userId) => {
         if (!newUserArray.includes(userId)) {
           newUserArray.push(userId);
           newUserFound = true;
@@ -29,7 +28,7 @@ const Chat: React.FC<ChatProps> = ({ chatItems }) => {
       });
       return newUserFound; // Return the item only if a new user was found
     });
-  }, [allChats]); 
+  }, [allChats]);
 
   const decrease = useNotificationStore((state) => state.decrease);
 

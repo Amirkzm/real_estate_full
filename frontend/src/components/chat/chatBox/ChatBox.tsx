@@ -38,6 +38,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const otherUser = useMemo(() => {
+    console.log(chatItem);
     return chatItem?.users.find((user) => user.id !== me?.id);
   }, [chatItem, me]) as UserType;
 
