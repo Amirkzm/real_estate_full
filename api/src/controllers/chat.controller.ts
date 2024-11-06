@@ -53,13 +53,18 @@ export const createChat = async (req: Request, res: Response) => {
   // Find a chat that has all the specified users
   const existingChat = await prisma.chat.findFirst({
     where: {
-      users: {
-        some: {
-          id: {
-            in: allUsersIds,
+      AND: [
+        {
+          users: {
+            some: { id: allUsersIds[0] },
           },
         },
-      },
+        {
+          users: {
+            some: { id: allUsersIds[1] },
+          },
+        },
+      ],
     },
     include: {
       users: true,
@@ -71,10 +76,10 @@ export const createChat = async (req: Request, res: Response) => {
   if (existingChat) {
     const existingUserIds = existingChat.users.map((user) => user.id);
     if (
-      existingUserIds.length === allUsersIds.length &&
+      existingUserIds.length === 2 &&
       allUsersIds.every((id) => existingUserIds.includes(id))
     ) {
-      return sendSuccessResponse(res, existingChat, 200); // Existing chat found
+      return sendSuccessResponse(res, existingChat, 200); // Exact chat found
     }
   }
 
