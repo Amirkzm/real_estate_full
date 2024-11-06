@@ -45,7 +45,7 @@ function App() {
           ),
         },
         {
-          path: "/list",
+          path: "/posts/list",
           element: (
             <ErrorBoundary>
               <ListPage />
@@ -54,7 +54,7 @@ function App() {
           loader: listPageLoader,
         },
         {
-          path: "/:id",
+          path: "/posts/:id",
           element: (
             <ErrorBoundary>
               <PostDetails />
@@ -102,7 +102,7 @@ function App() {
           ),
         },
         {
-          path: "/new-post",
+          path: "/posts/new-post",
           element: (
             <ErrorBoundary>
               <CreateNewPost />
@@ -119,7 +119,7 @@ function App() {
         <SocketProvider>
           <Toaster />
           <RouterProvider router={router} />
-           <ChatBox />
+          <ChatBox />
         </SocketProvider>
       </UserProvider>
     </GoogleOAuthProvider>

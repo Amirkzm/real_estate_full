@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
           <span>RealEstate</span>
         </Link>
         <Link to="/">Home</Link>
-        <Link to="/list">Places</Link>
+        <Link to="/posts/list">Places</Link>
         <Link to="/about">About</Link>
         <Link to="/">Contact</Link>
       </div>

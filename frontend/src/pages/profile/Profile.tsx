@@ -43,7 +43,7 @@ const Profile = () => {
           <div className="title">
             <h1>My List</h1>
             <Button>
-              <Link to={"/new-post"}>Create New Post</Link>
+              <Link to={"/posts/new-post"}>Create New Post</Link>
             </Button>
           </div>
           <Suspense fallback={fallback}>

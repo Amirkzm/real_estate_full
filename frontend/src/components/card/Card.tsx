@@ -65,7 +65,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
 
   return (
     <div className="card">
-      <Link to={`/${item.id}`} className="imageContainer">
+      <Link to={`/posts/${item.id}`} className="imageContainer">
         <img
           src={
             item.images.length > 0
@@ -77,7 +77,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
       </Link>
       <div className="textContainer">
         <h2 className="title">
-          <Link to={`/${item.id}`}>{item.title}</Link>
+          <Link to={`/posts/${item.id}`}>{item.title}</Link>
         </h2>
         <div className="address">
           <Tag title={item.address} tagColor="transparent" />
