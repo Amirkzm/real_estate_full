@@ -11,8 +11,9 @@ export const getFile = async (req: Request, res: Response) => {
   if (!filename) {
     throw new BadRequestException("Filename is required");
   }
-
-  const filePath = path.resolve("/app/dist/uploads", filename);
+  // Use an environment variable for the uploads path
+  const uploadDir = process.env.UPLOADS_PATH || "uploads";
+  const filePath = path.resolve(uploadDir, filename);
 
   // Check if file exists
   if (!fs.existsSync(filePath)) {
