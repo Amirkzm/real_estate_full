@@ -4,9 +4,15 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { createServer } from "http";
-import { Server as SocketIOServer } from "socket.io";
+import { Socket, Server as SocketIOServer } from "socket.io";
 import { errorMiddleWare } from "./middleware/error";
-import { authRouter, chatRouter, postRouter, userRouter } from "./routes";
+import {
+  authRouter,
+  chatRouter,
+  postRouter,
+  uploadRouter,
+  userRouter,
+} from "./routes";
 import path from "path";
 import { initializeSocket } from "./socket";
 import redisClient from "./redisClient";
@@ -48,6 +54,7 @@ app.use("/api/posts", postRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/chats", chatRouter);
+app.use("/uploads", uploadRouter);
 
 app.use(errorMiddleWare);
 
