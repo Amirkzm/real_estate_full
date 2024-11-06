@@ -2,6 +2,10 @@
 
 This repository contains a full-stack real estate application where users can register, create property ads, search for listings, and communicate with other users via real-time chat. The application includes comprehensive search and filter options, map integration, and notification features.
 
+## Demo
+
+<code>https://amirkzm-showcase.online</code>
+
 ## Features
 
 ### 1. User Authentication
@@ -66,8 +70,8 @@ This repository contains a full-stack real estate application where users can re
 
 ## Usage
 
-- Access the frontend at http://localhost:3000.
-- Access the backend API at http://localhost:5000.
+- Access the frontend at http://localhost:5174.
+- Access the backend API at http://localhost:3000.
 
 ## License
 
