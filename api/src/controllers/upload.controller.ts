@@ -12,8 +12,7 @@ export const getFile = async (req: Request, res: Response) => {
     throw new BadRequestException("Filename is required");
   }
 
-  // Resolve the file path in the uploads directory
-  const filePath = path.resolve("uploads", filename);
+  const filePath = path.resolve("/app/dist/uploads", filename);
 
   // Check if file exists
   if (!fs.existsSync(filePath)) {
