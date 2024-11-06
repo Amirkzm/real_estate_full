@@ -2,7 +2,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import "./map.scss";
 import "leaflet/dist/leaflet.css";
 import { Pin } from "./pin";
-import { LatLngLiteral } from "leaflet";
+import { LatLngExpression, LatLngLiteral } from "leaflet";
 import { MapItem } from "../../types/commonTypes";
 import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -29,21 +29,7 @@ const defaultIcon = new L.Icon({
 
 L.Marker.prototype.options.icon = defaultIcon;
 
-const generateMapCenter = (items: MapItem | MapItem[]) => {
-  let center: [number, number];
-  const defaultCenter = [52.4797, -1.90269];
-  if (Array.isArray(items)) {
-    center = [items[0]?.latitude, items[0]?.longitude];
-  } else {
-    center = [items?.latitude, items?.longitude];
-  }
-
-  if (center[0] && center[1]) {
-    return center;
-  } else {
-    return defaultCenter;
-  }
-};
+const DEFAULT_MAP_CENTER = [44.41473043356376, 8.90560961561277];
 
 const Map: React.FC<MapProps> = ({ ...props }: MapProps) => {
   let itemsToRender: MapItem | MapItem[];
@@ -53,13 +39,9 @@ const Map: React.FC<MapProps> = ({ ...props }: MapProps) => {
     itemsToRender = props.item;
   }
 
-  const mapCenter = generateMapCenter(
-    itemsToRender
-  ) as unknown as LatLngLiteral;
-
   return (
     <MapContainer
-      center={mapCenter}
+      center={DEFAULT_MAP_CENTER as LatLngExpression}
       zoom={"items" in props ? 5 : 7}
       scrollWheelZoom={false}
       className="map"

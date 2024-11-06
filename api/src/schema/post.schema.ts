@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Type, Property } from "@prisma/client";
 
 export const PostDetailsSchema = z.object({
-  description: z.string().min(5).max(50),
+  description: z.string().min(40).max(500),
   utilities: z.string().optional(),
   income: z.string().min(1).optional(),
   pet: z.string().optional(),

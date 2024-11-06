@@ -6,7 +6,7 @@ import { Await, useLoaderData, useSearchParams } from "react-router-dom";
 import { MapItem, SingleLocationType } from "../../types/commonTypes";
 import { Suspense } from "react";
 import { CardSkeleton } from "../../components/skeleton";
-import { loadingMapCenters } from "../../lib/data";
+import { Coordinates, loadingMapCenters } from "../../lib/data";
 
 const ListPage = () => {
   const data: any = useLoaderData();
@@ -51,12 +51,14 @@ const ListPage = () => {
         </div>
       </div>
       <div className="mapContainer">
-        <Suspense fallback={<Map items={initMapItems} />}>
+        <Suspense fallback={fallback}>
           <Await
             resolve={data.postListResponse}
-            errorElement={<p>Error loading posts!</p>}
+            errorElement={<p>Error loading map!</p>}
           >
-            {(postListResponse) => <Map items={postListResponse.data.data} />}
+            {(postListResponse) => {
+              return <Map items={postListResponse.data.data} />;
+            }}
           </Await>
         </Suspense>
       </div>

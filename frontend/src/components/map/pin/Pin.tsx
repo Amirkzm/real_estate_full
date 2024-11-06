@@ -10,18 +10,26 @@ type PinProps = {
 const DEFAULT_BEDROOM_COUNT = 1;
 
 const Pin: React.FC<PinProps> = ({ item }) => {
+  const { latitude, longitude } = item;
+
+  const isValidPosition = !isNaN(latitude) && !isNaN(longitude);
+
   return (
-    <Marker position={[item.latitude, item.longitude]}>
-      <Popup>
-        <div className="popupContainer">
-          <div className="textContainer">
-            <Link to={`/${item.id}`}>{item.title}</Link>
-            <span>{item?.bedroom ?? DEFAULT_BEDROOM_COUNT} bedroom</span>
-            <b>$ {item.price}</b>
-          </div>
-        </div>
-      </Popup>
-    </Marker>
+    <>
+      {isValidPosition && (
+        <Marker position={[latitude, longitude]}>
+          <Popup>
+            <div className="popupContainer">
+              <div className="textContainer">
+                <Link to={`/${item.id}`}>{item.title}</Link>
+                <span>{item?.bedroom ?? DEFAULT_BEDROOM_COUNT} bedroom</span>
+                <b>$ {item.price}</b>
+              </div>
+            </div>
+          </Popup>
+        </Marker>
+      )}
+    </>
   );
 };
 
